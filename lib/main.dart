@@ -1,3 +1,4 @@
+import 'package:chat_app/authentication/login_page.dart';
 import 'package:chat_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(
-        child: ,
+        child: LoginPage(),
       ),
     );
   }
