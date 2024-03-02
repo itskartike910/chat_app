@@ -18,13 +18,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Welcome To The ChatBox",
-           style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Color.fromARGB(255, 119, 254, 236),
+        child: const Center(
+          child: Text(
+            "Welcome To The ChatBox",
+             style: TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.bold,
+              fontSize: 18
+            ),
           ),
         ),
       ),

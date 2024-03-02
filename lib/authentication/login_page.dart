@@ -16,28 +16,28 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement build
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FormContainerWidget(),
-            SizedBox(height: 20),
+            const FormContainerWidget(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Navigator.pushNamed(context, '/home');
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Don\'t have an account?'),
+                const Text('Don\'t have an account?'),
                 TextButton(
                   onPressed: () {
                     // Navigator.pushNamed(context, '/register');
                   },
-                  child: Text('Register'),
+                  child: const Text('Register'),
                 ),
               ],
             ),
