@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 const backGroundColor=Color.fromRGBO(0, 0, 0, 1.0);
 const blueColor=Color.fromRGBO(0, 149, 246, 1);
@@ -26,9 +26,6 @@ Widget sizeVer(double height)
 Widget sizeHor(double width)
 {
   return SizedBox(width: width,);
-}
-Widget gallery(){
-  return Text("Gallery",style: GoogleFonts.lobster(textStyle: const TextStyle(fontStyle: FontStyle.italic,fontSize: 38,color: Colors.white)));
 }
 
 void toast(String message){

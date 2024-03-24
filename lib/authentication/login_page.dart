@@ -1,8 +1,7 @@
-
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/widgets/form_container.dart';
 import 'package:flutter/material.dart';
-
+import 'package:chat_app/consts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,14 +19,25 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const FormContainerWidget(),
+            const FormContainerWidget(
+              labelText: 'Email',
+              hintText: 'Enter your email',
+              inputType: TextInputType.emailAddress,
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Navigator.pushNamed(context, '/home');
-              },
-              child: const Text('Login'),
-            ),
+                onPressed: () {
+                  // Navigator.pushNamed(context, '/home');
+                },
+                child: const Text('Login'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: blueColor,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                  ),
+                )),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -46,6 +56,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }
-
