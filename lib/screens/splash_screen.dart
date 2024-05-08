@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Color.fromARGB(255, 119, 254, 236),
+        color: const Color.fromARGB(255, 119, 254, 236),
         child: const Center(
           child: Text(
             "Welcome To The ChatBox",

@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.9.23'
     repositories {
         google()
         mavenCentral()
@@ -17,13 +17,6 @@ allprojects {
     }
 }
 
-plugins {
-  // ...
-
-  // Add the dependency for the Google services Gradle plugin
-  id 'com.google.gms.google-services' version '4.4.1' apply false
-
-}
 
 rootProject.buildDir = '../build'
 subprojects {

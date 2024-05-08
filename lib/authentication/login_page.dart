@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   // Navigator.pushNamed(context, '/home');
                 },
-                child: const Text('Login'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: blueColor,
                   padding:
@@ -37,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
                   textStyle: const TextStyle(
                     fontSize: 20,
                   ),
-                )),
+                ),
+                child: const Text('Login')),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
