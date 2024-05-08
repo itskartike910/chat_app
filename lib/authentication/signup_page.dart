@@ -1,17 +1,17 @@
+import 'package:chat_app/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:chat_app/authentication/signup_page.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/consts.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,11 +21,16 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Login',
+              'Signup',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const FormContainerWidget(
+              labelText: 'Name',
+              hintText: 'Enter your name',
+              inputType: TextInputType.name,
             ),
             const FormContainerWidget(
               labelText: 'Email',
@@ -34,33 +39,33 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const FormContainerWidget(
               labelText: 'Password',
-              hintText: 'Enter your Password',
+              hintText: 'Enter your password',
               inputType: TextInputType.visiblePassword,
               isPasswordField: true,
             ),
             const SizedBox(height: 20),
             FormButtonWidget(
-              text: 'Login',
+              text: 'Signup',
               backgroundColor: Colors.purpleAccent,
               textColor: Colors.black,
               onPressed: () {
-                // Navigator.pushNamed(context, '/register');
+                // Navigator.pushNamed(context, '/home');
               },
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Don\'t have an account?'),
+                const Text('Already have an account?'),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignupPage()))
+                                builder: (context) => const LoginPage()))
                         .then((result) {});
                   },
-                  child: const Text('Register'),
+                  child: const Text('Login'),
                 ),
               ],
             ),

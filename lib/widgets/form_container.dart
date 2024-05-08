@@ -28,6 +28,7 @@ class FormContainerWidget extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _FormContainerWidgetState createState() => _FormContainerWidgetState();
 }
 
@@ -42,7 +43,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(15.0),
         child: TextFormField(
           style: const TextStyle(color: Colors.black),
           controller: widget.controller,
