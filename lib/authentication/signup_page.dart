@@ -1,8 +1,8 @@
 import 'package:chat_app/authentication/login_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/widgets/consts.dart';
 
 class SignupPage extends StatefulWidget {
@@ -12,6 +12,15 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  //Text Editing Controllers
+  final name = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final cnfpassword = TextEditingController();
+
+  String? pass;
+  String? cnfpass;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,31 +30,48 @@ class _SignupPageState extends State<SignupPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Signup',
+              'SignUp',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const FormContainerWidget(
+            FormContainerWidget(
               labelText: 'Name',
               hintText: 'Enter your name',
               inputType: TextInputType.name,
+              controller: name,
             ),
-            const FormContainerWidget(
+            FormContainerWidget(
               labelText: 'Email',
               hintText: 'Enter your email',
               inputType: TextInputType.emailAddress,
+              controller: email,
             ),
-            const FormContainerWidget(
+            FormContainerWidget(
               labelText: 'Password',
               hintText: 'Enter your password',
               inputType: TextInputType.visiblePassword,
               isPasswordField: true,
+              controller: password,
             ),
-            const SizedBox(height: 20),
+            FormContainerWidget(
+              labelText: 'Confirm Password',
+              hintText: 'Enter your password again',
+              inputType: TextInputType.visiblePassword,
+              isPasswordField: true,
+              controller: cnfpassword,
+            ),
+            Text(
+              password == cnfpassword
+                  ? "Passwords match"
+                  : "Passwords do not match",
+              style: TextStyle(
+                  color: password == cnfpassword ? Colors.green : Colors.red),
+            ),
+            sizeVer(20),
             FormButtonWidget(
-              text: 'Signup',
+              text: 'SignUp',
               backgroundColor: Colors.purpleAccent,
               textColor: Colors.black,
               onPressed: () {

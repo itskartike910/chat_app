@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class FormContainerWidget extends StatefulWidget {
   final TextEditingController? controller;
   final Key? fieldKey;
@@ -11,8 +12,10 @@ class FormContainerWidget extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final TextInputType? inputType;
+  String? value;
   // final Icon? icon;
-  const FormContainerWidget({
+  // ignore: prefer_const_constructors_in_immutables
+  FormContainerWidget({
     super.key,
     this.controller,
     this.isPasswordField,
@@ -24,6 +27,7 @@ class FormContainerWidget extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.inputType,
+    this.value,
     // this.icon,
   });
 
@@ -53,6 +57,11 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           onSaved: widget.onSaved,
           validator: widget.validator,
           onFieldSubmitted: widget.onFieldSubmitted,
+          onChanged: (text) {
+            setState(() {
+              widget.value = text;
+            });
+          },
           decoration: InputDecoration(
             labelText: widget.labelText,
             border: const OutlineInputBorder(

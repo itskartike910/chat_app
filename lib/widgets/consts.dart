@@ -11,11 +11,11 @@ var messageFontSize = 16.0;
 Color senderColor = Colors.pink;
 Color receiverColor = Colors.blue;
 
-var lightPinkBackground = LinearGradient(
-  colors: [Colors.pink.shade50, Colors.white],
-  begin: const FractionalOffset(0.0, 0.0),
-  end: const FractionalOffset(0.0, 1.0),
-  stops: const [1.0, 1.0],
+var gradientBackground = const LinearGradient(
+  colors: [Color.fromARGB(255, 194, 251, 246), Colors.white],
+  begin: FractionalOffset(0.0, 0.0),
+  end: FractionalOffset(0.0, 1.0),
+  stops: [1.0, 1.0],
   tileMode: TileMode.clamp,
 );
 
