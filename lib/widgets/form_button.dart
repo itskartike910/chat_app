@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormButtonWidget extends StatefulWidget {
@@ -29,15 +30,13 @@ class _FormButtonWidgetState extends State<FormButtonWidget> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: ElevatedButton(
+        child: CupertinoButton(
           onPressed: () {
             widget.onPressed!();
           },
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStatePropertyAll<Color>(widget.backgroundColor),
-            fixedSize: const MaterialStatePropertyAll<Size>(Size(270, 50)),
-          ),
+          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+          color: widget.backgroundColor,
+          disabledColor: Colors.grey,
           child: Text(
             widget.text as String,
             style: TextStyle(

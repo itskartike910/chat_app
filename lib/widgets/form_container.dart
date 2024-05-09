@@ -13,7 +13,7 @@ class FormContainerWidget extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final TextInputType? inputType;
   String? value;
-  // final Icon? icon;
+  final IconData? icon;
   // ignore: prefer_const_constructors_in_immutables
   FormContainerWidget({
     super.key,
@@ -28,7 +28,7 @@ class FormContainerWidget extends StatefulWidget {
     this.onFieldSubmitted,
     this.inputType,
     this.value,
-    // this.icon,
+    this.icon,
   });
 
   @override
@@ -72,6 +72,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
             filled: true,
             hintText: widget.hintText,
             // hintStyle: TextStyle(color: Colors.black45),
+            prefixIcon: Icon(widget.icon as IconData?),
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {

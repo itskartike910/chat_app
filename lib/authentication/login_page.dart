@@ -1,7 +1,9 @@
 import 'package:chat_app/authentication/signup_page.dart';
+import 'package:chat_app/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/consts.dart';
 
@@ -27,8 +29,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         backgroundColor: bgColor,
         centerTitle: true,
-        shadowColor: Colors.white,
-        elevation: 0,
+        shadowColor: const Color.fromARGB(255, 36, 255, 215),
+        elevation: 5,
         foregroundColor: Colors.black,
       ),
       body: SafeArea(
@@ -42,17 +44,8 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // const Text(
-                  //   'ChatBox',
-                  //   style: TextStyle(
-                  //     fontSize: 45,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: blueColor
-                  //   ),
-                  // ),
-                  // sizeVer(25),
                   const Text(
-                    'LogIn',
+                    'Log In',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -62,22 +55,28 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: 'Email',
                     hintText: 'Enter your email',
                     inputType: TextInputType.emailAddress,
+                    icon: Icons.email,
                     controller: email,
                   ),
                   FormContainerWidget(
                     labelText: 'Password',
                     hintText: 'Enter your Password',
                     inputType: TextInputType.visiblePassword,
+                    icon: Icons.password,
                     controller: password,
                     isPasswordField: true,
                   ),
                   const SizedBox(height: 20),
                   FormButtonWidget(
-                    text: 'Login',
+                    text: 'Log In',
                     backgroundColor: Colors.purpleAccent,
                     textColor: Colors.black,
                     onPressed: () {
-                      // Navigator.pushNamed(context, '/register');
+                      Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()))
+                          .then((result) {});
                     },
                   ),
                   const SizedBox(height: 20),
@@ -85,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       const Text('Don\'t have an account?'),
-                      TextButton(
+                      CupertinoButton(
                         onPressed: () {
                           Navigator.push(
                                   context,
@@ -93,7 +92,13 @@ class _LoginPageState extends State<LoginPage> {
                                       builder: (context) => const SignupPage()))
                               .then((result) {});
                         },
-                        child: const Text('Register'),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: blueColor,
+                              fontSize: 16),
+                        ),
                       ),
                     ],
                   ),

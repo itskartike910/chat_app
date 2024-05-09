@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/consts.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(
-      const Duration(seconds: 3),
+      const Duration(seconds: 2),
       () {
         Navigator.pushAndRemoveUntil(
             context,
@@ -28,15 +29,28 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: const Color.fromARGB(255, 111, 255, 236),
+        decoration: BoxDecoration(
+          gradient: gradientBackground,
+        ),
         child: const Center(
-          child: Text(
-            "Welcome To The ChatBox",
-            style: TextStyle(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.whatshot,
+                size: 100,
                 color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 18),
+              ),
+              Text(
+                "Welcome To The ChatBox",
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+            ],
           ),
+          
         ),
       ),
     );
