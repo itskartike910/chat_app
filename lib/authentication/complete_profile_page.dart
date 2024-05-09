@@ -51,9 +51,7 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
               ),
               sizeVer(20),
               CupertinoButton(
-                onPressed: (){
-
-                },
+                onPressed: () {},
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: blueColor,
@@ -64,6 +62,14 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                   ),
                 ),
               ),
+              const Text(
+                "Change your profile picture by tapping the icon.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               sizeVer(20),
               FormContainerWidget(
                 labelText: 'Name',
@@ -71,28 +77,49 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                 inputType: TextInputType.name,
                 icon: Icons.person,
               ),
-              FormContainerWidget(
-                labelText: 'Email',
-                hintText: 'Enter your email',
-                inputType: TextInputType.emailAddress,
-                icon: Icons.email,
-              ),
-              FormContainerWidget(
-                labelText: 'Phone Number',
-                hintText: 'Enter your Phone Number',
-                inputType: TextInputType.number,
-                icon: Icons.phone,
-              ),
-              FormContainerWidget(
-                labelText: 'Password',
-                hintText: 'Create your password',
-                inputType: TextInputType.visiblePassword,
-                icon: Icons.password,
-                isPasswordField: true,
-              ),
+              // FormContainerWidget(
+              //   labelText: 'Email',
+              //   hintText: 'Enter your email',
+              //   inputType: TextInputType.emailAddress,
+              //   icon: Icons.email,
+              // ),
+              // FormContainerWidget(
+              //   labelText: 'Phone Number',
+              //   hintText: 'Enter your Phone Number',
+              //   inputType: TextInputType.number,
+              //   icon: Icons.phone,
+              // ),
+              // FormContainerWidget(
+              //   labelText: 'Password',
+              //   hintText: 'Create your password',
+              //   inputType: TextInputType.visiblePassword,
+              //   icon: Icons.password,
+              //   isPasswordField: true,
+              // ),
               sizeVer(10),
               FormButtonWidget(
-                text: 'Submit',
+                text: 'Save',
+                backgroundColor: Colors.purpleAccent,
+                textColor: Colors.black,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()))
+                      .then((result) {});
+                },
+              ),
+              sizeVer(10),
+              const Text(
+                "Or Do it later?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              FormButtonWidget(
+                text: 'Continue',
                 backgroundColor: Colors.purpleAccent,
                 textColor: Colors.black,
                 onPressed: () {
@@ -109,4 +136,9 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
       ),
     );
   }
+
+  void showPhotoOptions(){
+    
+  }
+
 }

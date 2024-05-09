@@ -1,11 +1,11 @@
 import 'package:chat_app/authentication/complete_profile_page.dart';
-import 'package:chat_app/authentication/login_page.dart';
-import 'package:chat_app/pages/home_page.dart';
+import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_app/widgets/consts.dart';
 
 class SignupPage extends StatefulWidget {
@@ -16,13 +16,10 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   //Text Editing Controllers
-  final name = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final cnfpassword = TextEditingController();
-
-  String? pass;
-  String? cnfpass;
+  // TextEditingController name = TextEditingController();
+  TextEditingController emails = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController cnfpassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +61,7 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: 'Enter your email',
                     inputType: TextInputType.emailAddress,
                     icon: Icons.email,
-                    controller: email,
+                    controller: emails,
                   ),
                   FormContainerWidget(
                     labelText: 'Password',
@@ -82,27 +79,13 @@ class _SignupPageState extends State<SignupPage> {
                     isPasswordField: true,
                     controller: cnfpassword,
                   ),
-                  // Text(
-                  //   password == cnfpassword
-                  //       ? "Passwords match"
-                  //       : "Passwords do not match",
-                  //   style: TextStyle(
-                  //       color: password == cnfpassword
-                  //           ? Colors.green
-                  //           : Colors.red),
-                  // ),
                   sizeVer(20),
                   FormButtonWidget(
                     text: 'Sign Up',
                     backgroundColor: Colors.purpleAccent,
                     textColor: Colors.black,
                     onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CompleteProfilePage()))
-                          .then((result) {});
+                      checkValues();
                     },
                   ),
                   const SizedBox(height: 20),
@@ -131,5 +114,58 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
+  }
+
+  void checkValues() {
+    String email = emails.text.trim();
+    String pass = password.text.trim();
+    String cnfpass = cnfpassword.text.trim();
+
+    if (email == "" || pass == "" || cnfpass == "") {
+      toast("Please fill all the fields!");
+    } else if (pass != cnfpass) {
+      toast("Passwords do not match!");
+    } else {
+      signUp(email, pass);
+    }
+  }
+
+  void signUp(String email, String pass) async {
+    UserCredential? credential;
+
+    try {
+      credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: pass);
+    } on FirebaseAuthException catch (ex) {
+      String str = ex.code.toString();
+      toast(str);
+    }
+
+    if (credential != null) {
+      String uid = credential.user!.uid;
+
+      UserModel newUser = UserModel(
+        uid: uid,
+        email: email,
+        name: '',
+        profilepic: '',
+      );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set(newUser.toMap())
+          .then(
+            (value) => {
+              toast("SignUp Successful..New User Created!"),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CompleteProfilePage(),
+                ),
+              )
+            },
+          );
+    }
   }
 }

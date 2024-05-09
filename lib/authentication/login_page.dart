@@ -1,5 +1,7 @@
 import 'package:chat_app/authentication/signup_page.dart';
+import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
@@ -14,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final email = TextEditingController();
+  final emails = TextEditingController();
   final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Enter your email',
                     inputType: TextInputType.emailAddress,
                     icon: Icons.email,
-                    controller: email,
+                    controller: emails,
                   ),
                   FormContainerWidget(
                     labelText: 'Password',
@@ -72,11 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: Colors.purpleAccent,
                     textColor: Colors.black,
                     onPressed: () {
-                      Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()))
-                          .then((result) {});
+                      checkValues();
                     },
                   ),
                   const SizedBox(height: 20),
@@ -109,5 +107,48 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void checkValues() {
+    String email = emails.text.trim();
+    String pass = password.text.trim();
+
+    if (email == "" || pass == "") {
+      toast("Please fill all the fields!");
+    } else {
+      logIn(email, pass);
+    }
+  }
+
+  void logIn(String email, String pass) async {
+    UserCredential? credential;
+
+    try {
+      credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pass);
+    } on FirebaseAuthException catch (ex) {
+      String str = ex.code.toString();
+      toast(str);
+    }
+
+    if (credential != null) {
+      String uid = credential.user!.uid;
+
+      DocumentSnapshot userData =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+      UserModel usermodel =
+          UserModel.fromMap(userData.data() as Map<String, dynamic>);
+
+      toast("LogIn Successful");
+
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    }
   }
 }

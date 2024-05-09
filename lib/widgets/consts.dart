@@ -34,11 +34,11 @@ Widget sizeHor(double width) {
 void toast(String message) {
   Fluttertoast.showToast(
     msg: message,
-    toastLength: Toast.LENGTH_SHORT,
+    toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 2,
     backgroundColor: blueColor,
-    textColor: Colors.white,
+    textColor: primaryColor,
     fontSize: 16.0,
   );
 }

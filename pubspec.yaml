@@ -41,6 +41,8 @@ dependencies:
   firebase_auth: ^4.19.5
   cloud_firestore: ^4.17.3
   firebase_storage: ^11.7.5
+  image_picker: ^1.1.1
+  image_cropper: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +53,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   
 
 # For information on the generic Dart part of this file, see the
