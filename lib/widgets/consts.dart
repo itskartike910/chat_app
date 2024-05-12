@@ -31,10 +31,10 @@ Widget sizeHor(double width) {
   );
 }
 
-void toast(String message) {
+void toast(String message, Toast length) {
   Fluttertoast.showToast(
     msg: message,
-    toastLength: Toast.LENGTH_LONG,
+    toastLength: length,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 2,
     backgroundColor: blueColor,

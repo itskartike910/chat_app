@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/consts.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -68,11 +69,10 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               borderSide: BorderSide(width: 2),
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
             ),
-            // prefixIcon: Icon(Icons.widgets,color: Colors.pinkAccent,),
             filled: true,
+            fillColor: const Color.fromARGB(255, 100, 255, 180),
             hintText: widget.hintText,
-            // hintStyle: TextStyle(color: Colors.black45),
-            prefixIcon: Icon(widget.icon as IconData?),
+            prefixIcon: Icon(widget.icon, color: blueColor,),
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {

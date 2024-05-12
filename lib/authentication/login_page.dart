@@ -8,6 +8,7 @@ import 'package:chat_app/widgets/form_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/consts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -114,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
     String pass = password.text.trim();
 
     if (email == "" || pass == "") {
-      toast("Please fill all the fields!");
+      toast("Please fill all the fields!", Toast.LENGTH_LONG);
     } else {
       logIn(email, pass);
     }
@@ -128,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: email, password: pass);
     } on FirebaseAuthException catch (ex) {
       String str = ex.code.toString();
-      toast(str);
+      toast(str, Toast.LENGTH_LONG);
     }
 
     if (credential != null) {
@@ -137,10 +138,11 @@ class _LoginPageState extends State<LoginPage> {
       DocumentSnapshot userData =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
+      // ignore: unused_local_variable
       UserModel usermodel =
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
-      toast("LogIn Successful");
+      toast("LogIn Successful", Toast.LENGTH_SHORT);
 
       Navigator.pushReplacement(
         // ignore: use_build_context_synchronously

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_app/widgets/consts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -122,9 +123,9 @@ class _SignupPageState extends State<SignupPage> {
     String cnfpass = cnfpassword.text.trim();
 
     if (email == "" || pass == "" || cnfpass == "") {
-      toast("Please fill all the fields!");
+      toast("Please fill all the fields!", Toast.LENGTH_LONG);
     } else if (pass != cnfpass) {
-      toast("Passwords do not match!");
+      toast("Passwords do not match!", Toast.LENGTH_LONG);
     } else {
       signUp(email, pass);
     }
@@ -138,7 +139,7 @@ class _SignupPageState extends State<SignupPage> {
           .createUserWithEmailAndPassword(email: email, password: pass);
     } on FirebaseAuthException catch (ex) {
       String str = ex.code.toString();
-      toast(str);
+      toast(str, Toast.LENGTH_LONG);
     }
 
     if (credential != null) {
@@ -157,7 +158,8 @@ class _SignupPageState extends State<SignupPage> {
           .set(newUser.toMap())
           .then(
             (value) => {
-              toast("SignUp Successful..New User Created!"),
+              toast("SignUp Successful..New User Created!",  Toast.LENGTH_SHORT),
+              Navigator.pop(context),
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
