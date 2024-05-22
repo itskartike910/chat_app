@@ -2,6 +2,8 @@ import 'package:chat_app/authentication/login_page.dart';
 import 'package:chat_app/widgets/consts.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +29,15 @@ class _HomePageState extends State<HomePage> {
         shadowColor: const Color.fromARGB(255, 36, 255, 215),
         elevation: 5,
         foregroundColor: Colors.black,
+      ),
+      drawer: Drawer(
+        elevation: 5,
+        shadowColor: const Color.fromARGB(255, 36, 255, 215),
+        backgroundColor: bgColor,
+        surfaceTintColor: primaryColor,
+        child: ListView(
+
+        ),
       ),
       body: SafeArea(
         child: Container(

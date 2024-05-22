@@ -14,6 +14,7 @@ class FormContainerWidget extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final TextInputType? inputType;
   String? value;
+  bool enabled;
   final IconData? icon;
   // ignore: prefer_const_constructors_in_immutables
   FormContainerWidget({
@@ -29,6 +30,7 @@ class FormContainerWidget extends StatefulWidget {
     this.onFieldSubmitted,
     this.inputType,
     this.value,
+    this.enabled = true,
     this.icon,
   });
 
@@ -63,6 +65,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               widget.value = text;
             });
           },
+          enabled: widget.enabled,
           decoration: InputDecoration(
             labelText: widget.labelText,
             border: const OutlineInputBorder(
@@ -70,9 +73,12 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
             ),
             filled: true,
-            fillColor: const Color.fromARGB(255, 100, 255, 180),
+            fillColor: Color.fromARGB(255, 192, 254, 224),
             hintText: widget.hintText,
-            prefixIcon: Icon(widget.icon, color: blueColor,),
+            prefixIcon: Icon(
+              widget.icon,
+              color: blueColor,
+            ),
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {

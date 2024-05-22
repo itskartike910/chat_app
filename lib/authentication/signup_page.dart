@@ -163,7 +163,7 @@ class _SignupPageState extends State<SignupPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CompleteProfilePage(),
+                  builder: (context) => CompleteProfilePage(userModel: newUser, firebaseUser: credential!.user!,),
                 ),
               )
             },
