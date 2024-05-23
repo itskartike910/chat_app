@@ -17,7 +17,6 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   //Text Editing Controllers
-  // TextEditingController name = TextEditingController();
   TextEditingController emails = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController cnfpassword = TextEditingController();
@@ -158,12 +157,15 @@ class _SignupPageState extends State<SignupPage> {
           .set(newUser.toMap())
           .then(
             (value) => {
-              toast("SignUp Successful..New User Created!",  Toast.LENGTH_SHORT),
+              toast("SignUp Successful..New User Created!", Toast.LENGTH_SHORT),
               Navigator.pop(context),
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CompleteProfilePage(userModel: newUser, firebaseUser: credential!.user!,),
+                  builder: (context) => CompleteProfilePage(
+                    userModel: newUser,
+                    firebaseUser: credential!.user!,
+                  ),
                 ),
               )
             },

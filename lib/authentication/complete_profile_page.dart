@@ -97,11 +97,11 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                 icon: Icons.person,
                 controller: fullName,
               ),
-              // const Text("Email",textAlign: TextAlign.center,),
+              // Text("Email: ${widget.firebaseUser.email}",textAlign: TextAlign.center,),
               FormContainerWidget(
                 // labelText: 'Email',
                 enabled: false,
-                hintText: widget.firebaseUser.email as String,
+                hintText: "Email: ${widget.firebaseUser.email}",
                 inputType: TextInputType.emailAddress,
                 icon: Icons.email,
               ),
@@ -125,11 +125,6 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                 textColor: Colors.black,
                 onPressed: () {
                   checkValues();
-                  // Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) => const HomePage()))
-                  //     .then((result) {});
                 },
               ),
               sizeVer(10),
@@ -147,10 +142,12 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                 textColor: Colors.black,
                 onPressed: () {
                   Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()))
-                      .then((result) {});
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                userModel: widget.userModel,
+                                firebaseUser: widget.firebaseUser,
+                              ))).then((result) {});
                 },
               ),
             ],
@@ -262,6 +259,13 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
           .set(widget.userModel.toMap())
           .then((value) {
         toast("Data Uploaded...", Toast.LENGTH_LONG);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(
+                      userModel: widget.userModel,
+                      firebaseUser: widget.firebaseUser,
+                    ))).then((result) {});
       });
     } catch (e) {
       toast("Error uploading data: $e", Toast.LENGTH_LONG);

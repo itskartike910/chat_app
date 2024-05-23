@@ -1,18 +1,35 @@
 import 'package:chat_app/authentication/login_page.dart';
+import 'package:chat_app/models/user_model.dart';
+import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/widgets/consts.dart';
 import 'package:chat_app/widgets/form_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserModel userModel;
+  final User firebaseUser;
+  const HomePage(
+      {super.key, required this.userModel, required this.firebaseUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  String? imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    loadImage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +53,80 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: bgColor,
         surfaceTintColor: primaryColor,
         child: ListView(
-
+          children: [
+            sizeVer(20),
+            CircleAvatar(
+              radius: 60,
+              backgroundColor: blueColor,
+              backgroundImage:
+                  imageUrl != null ? NetworkImage(imageUrl!) : null,
+              child: imageUrl == null
+                  ? const Icon(
+                      Icons.person,
+                      size: 80,
+                      color: Colors.white,
+                    )
+                  : null,
+            ),
+            sizeVer(20),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                "Hello, ",
+                style: GoogleFonts.dancingScript(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+                softWrap: true,
+              ),
+            ),
+            Text(
+              widget.userModel.name!,
+              style: GoogleFonts.dancingScript(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: Colors.red,
+                backgroundColor: const Color.fromARGB(255, 120, 230, 255),
+                letterSpacing: 1.5,
+              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+            // Text(
+            //   "Email: ${widget.userModel.email!}",
+            //   style: const TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     backgroundColor: Color.fromARGB(255, 120, 230, 255),
+            //   ),
+            //   textAlign: TextAlign.center,
+            //   softWrap: true,
+            // ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Future.delayed(const Duration(milliseconds: 100), () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchPage(
+                  userModel: widget.userModel,
+                  firebaseUser: widget.firebaseUser,
+                ),
+              ),
+            );
+          });
+        },
+        elevation: 5,
+        backgroundColor: const Color.fromARGB(255, 251, 194, 255),
+        splashColor: Colors.blue,
+        child: const Icon(
+          Icons.search_sharp,
+          size: 30,
+          shadows: [Shadow(color: Colors.black)],
         ),
       ),
       body: SafeArea(
@@ -71,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: Colors.red,
                     textColor: Colors.white,
                     onPressed: () {
+                      FirebaseAuth.instance.signOut();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -86,5 +177,25 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<String?> getImageDownloadUrl() async {
+    try {
+      String downloadUrl = await FirebaseStorage.instance
+          .ref("profilepictures")
+          .child(widget.userModel.uid.toString())
+          .getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      toast("Error Loading Image: $e", Toast.LENGTH_SHORT);
+      return null;
+    }
+  }
+
+  void loadImage() async {
+    String? url = await getImageDownloadUrl();
+    setState(() {
+      imageUrl = url;
+    });
   }
 }
