@@ -7,7 +7,6 @@ import 'package:chat_app/widgets/form_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:chat_app/main.dart';
 
 class SearchPage extends StatefulWidget {
@@ -87,86 +86,92 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     sizeVer(10),
                     StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .where("email",
-                                isEqualTo:
-                                    searchController.text.trim().toString())
-                            .where("email",
-                                isNotEqualTo:
-                                    widget.userModel.email!.trim().toString())
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            if (snapshot.hasData) {
-                              QuerySnapshot querySnapshot =
-                                  snapshot.data as QuerySnapshot;
+                      stream: FirebaseFirestore.instance
+                          .collection("users")
+                          .where("email",
+                              isEqualTo:
+                                  searchController.text.trim().toString())
+                          .where("email",
+                              isNotEqualTo:
+                                  widget.userModel.email!.trim().toString())
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          if (snapshot.hasData) {
+                            QuerySnapshot querySnapshot =
+                                snapshot.data as QuerySnapshot;
 
-                              if (querySnapshot.docs.isNotEmpty) {
-                                Map<String, dynamic> userMap =
-                                    querySnapshot.docs[0].data()
-                                        as Map<String, dynamic>;
+                            if (querySnapshot.docs.isNotEmpty) {
+                              Map<String, dynamic> userMap =
+                                  querySnapshot.docs[0].data()
+                                      as Map<String, dynamic>;
 
-                                UserModel searchedUser =
-                                    UserModel.fromMap(userMap);
+                              UserModel searchedUser =
+                                  UserModel.fromMap(userMap);
 
-                                return ListTile(
-                                  title: Text(
-                                    searchedUser.name.toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 18),
-                                  ),
-                                  subtitle: Text(
-                                    searchedUser.email.toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14),
-                                  ),
-                                  titleAlignment: ListTileTitleAlignment.center,
-                                  leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(searchedUser.profilepic!),
-                                    radius: 22,
-                                  ),
-                                  trailing: const Icon(
-                                    Icons.keyboard_arrow_right_sharp,
-                                    size: 25,
-                                  ),
-                                  onTap: () async {
-                                    ChatRoomModel? chatRoomModel =
-                                        await getChatRoom(searchedUser);
-                                    // Navigator.pop(context);
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => ChatPage(
-                                    //       userModel: widget.userModel,
-                                    //       firebaseUser: widget.firebaseUser,
-                                    //       chatUser: searchedUser,
-                                    //     ),
-                                    //   ),
-                                    // );
-                                  },
-                                );
-                              } else {
-                                // toast("No Result Found!!", Toast.LENGTH_LONG);
-                                return const Text("No Results Found!!");
-                              }
-                            } else if (snapshot.hasError) {
-                              // toast("An error occured!!", Toast.LENGTH_LONG);
-                              return const Text("An error occured!!");
+                              return ListTile(
+                                title: Text(
+                                  searchedUser.name.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 18),
+                                ),
+                                subtitle: Text(
+                                  searchedUser.email.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                                titleAlignment: ListTileTitleAlignment.center,
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(searchedUser.profilepic!),
+                                  radius: 22,
+                                ),
+                                trailing: const Icon(
+                                  Icons.keyboard_arrow_right_sharp,
+                                  size: 25,
+                                ),
+                                onTap: () async {
+                                  ChatRoomModel? chatRoomModel =
+                                      await getChatRoom(searchedUser);
+                                  if (chatRoomModel != null) {
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      // ignore: use_build_context_synchronously
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          userModel: widget.userModel,
+                                          firebaseUser: widget.firebaseUser,
+                                          chatUser: searchedUser,
+                                          chatroom: chatRoomModel,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
                             } else {
                               // toast("No Result Found!!", Toast.LENGTH_LONG);
                               return const Text("No Results Found!!");
                             }
+                          } else if (snapshot.hasError) {
+                            // toast("An error occured!!", Toast.LENGTH_LONG);
+                            return const Text("An error occured!!");
                           } else {
-                            return const CircularProgressIndicator();
+                            // toast("No Result Found!!", Toast.LENGTH_LONG);
+                            return const Text("No Results Found!!");
                           }
-                        }),
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -188,6 +193,10 @@ class _SearchPageState extends State<SearchPage> {
     if (snapshot.docs.isNotEmpty) {
       //Fetching the existing one
       // toast("ChatRoom already exists", Toast.LENGTH_SHORT);
+      var docData = snapshot.docs[0].data();
+      ChatRoomModel existingChatroom =
+          ChatRoomModel.fromMap(docData as Map<String, dynamic>);
+      chatRoomModel = existingChatroom;
     } else {
       //Creating a new one
       // toast("ChatRoom not created", Toast.LENGTH_SHORT);
@@ -204,9 +213,9 @@ class _SearchPageState extends State<SearchPage> {
           .collection("chatrooms")
           .doc(newChatroom.charRoomId)
           .set(newChatroom.toMap());
-      toast("New Chatroom created.", Toast.LENGTH_SHORT);
+      // toast("New Chatroom created.", Toast.LENGTH_SHORT);
+      chatRoomModel = newChatroom;
     }
-
     return chatRoomModel;
   }
 }

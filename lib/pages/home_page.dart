@@ -3,10 +3,8 @@ import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/widgets/consts.dart';
 import 'package:chat_app/widgets/form_button.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {

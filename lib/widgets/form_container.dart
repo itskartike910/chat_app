@@ -73,7 +73,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
             ),
             filled: true,
-            fillColor: Color.fromARGB(255, 192, 254, 224),
+            fillColor: const Color.fromARGB(255, 192, 254, 224),
             hintText: widget.hintText,
             prefixIcon: Icon(
               widget.icon,
