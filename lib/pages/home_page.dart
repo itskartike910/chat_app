@@ -5,9 +5,7 @@ import 'package:chat_app/widgets/consts.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,13 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? imageUrl;
-
-  @override
-  void initState() {
-    super.initState();
-    loadImage();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +47,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             sizeVer(20),
             CircleAvatar(
-              radius: 60,
+              backgroundImage: NetworkImage(widget.userModel.profilepic!),
               backgroundColor: blueColor,
-              backgroundImage:
-                  imageUrl != null ? NetworkImage(imageUrl!) : null,
-              child: imageUrl == null
-                  ? const Icon(
-                      Icons.person,
-                      size: 80,
-                      color: Colors.white,
-                    )
-                  : null,
+              radius: 60,
             ),
             sizeVer(20),
             Padding(
@@ -108,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Future.delayed(const Duration(milliseconds: 100), () {
+          Future.delayed(const Duration(milliseconds: 120), () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -177,25 +160,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Future<String?> getImageDownloadUrl() async {
-    try {
-      String downloadUrl = await FirebaseStorage.instance
-          .ref("profilepictures")
-          .child(widget.userModel.uid.toString())
-          .getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      toast("Error Loading Image: $e", Toast.LENGTH_SHORT);
-      return null;
-    }
-  }
-
-  void loadImage() async {
-    String? url = await getImageDownloadUrl();
-    setState(() {
-      imageUrl = url;
-    });
   }
 }

@@ -218,7 +218,7 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: file.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 60,
+      compressQuality: 50,
     );
 
     if (croppedImage != null) {

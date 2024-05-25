@@ -1,4 +1,6 @@
+import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/user_model.dart';
+import 'package:chat_app/pages/chat_page.dart';
 import 'package:chat_app/widgets/consts.dart';
 import 'package:chat_app/widgets/form_button.dart';
 import 'package:chat_app/widgets/form_container.dart';
@@ -6,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:chat_app/main.dart';
 
 class SearchPage extends StatefulWidget {
   final UserModel userModel;
@@ -14,11 +17,13 @@ class SearchPage extends StatefulWidget {
       {super.key, required this.userModel, required this.firebaseUser});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
+  String txt = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,24 +72,29 @@ class _SearchPageState extends State<SearchPage> {
                       backgroundColor: Colors.purpleAccent,
                       textColor: Colors.black,
                       onPressed: () {
-                        setState(() {});
+                        setState(() {
+                          txt = "Search Results";
+                        });
                       },
                     ),
                     sizeVer(10),
-                    // const Text(
-                    //   'Search Results',
-                    //   style: TextStyle(
-                    //     fontSize: 20,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // sizeVer(10),
+                    Text(
+                      txt,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    sizeVer(10),
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("users")
                             .where("email",
                                 isEqualTo:
                                     searchController.text.trim().toString())
+                            .where("email",
+                                isNotEqualTo:
+                                    widget.userModel.email!.trim().toString())
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -114,20 +124,43 @@ class _SearchPageState extends State<SearchPage> {
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 16),
+                                        fontSize: 14),
                                   ),
                                   titleAlignment: ListTileTitleAlignment.center,
-                              
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(searchedUser.profilepic!),
+                                    radius: 22,
+                                  ),
+                                  trailing: const Icon(
+                                    Icons.keyboard_arrow_right_sharp,
+                                    size: 25,
+                                  ),
+                                  onTap: () async {
+                                    ChatRoomModel? chatRoomModel =
+                                        await getChatRoom(searchedUser);
+                                    // Navigator.pop(context);
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => ChatPage(
+                                    //       userModel: widget.userModel,
+                                    //       firebaseUser: widget.firebaseUser,
+                                    //       chatUser: searchedUser,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  },
                                 );
                               } else {
-                                toast("No Result Found!!", Toast.LENGTH_LONG);
+                                // toast("No Result Found!!", Toast.LENGTH_LONG);
                                 return const Text("No Results Found!!");
                               }
                             } else if (snapshot.hasError) {
-                              toast("An error occured!!", Toast.LENGTH_LONG);
+                              // toast("An error occured!!", Toast.LENGTH_LONG);
                               return const Text("An error occured!!");
                             } else {
-                              toast("No Result Found!!", Toast.LENGTH_LONG);
+                              // toast("No Result Found!!", Toast.LENGTH_LONG);
                               return const Text("No Results Found!!");
                             }
                           } else {
@@ -142,5 +175,38 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  Future<ChatRoomModel?> getChatRoom(UserModel targetUser) async {
+    ChatRoomModel? chatRoomModel;
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .where("participants.${widget.userModel.uid}", isEqualTo: true)
+        .where("participants.${targetUser.uid}", isEqualTo: true)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      //Fetching the existing one
+      // toast("ChatRoom already exists", Toast.LENGTH_SHORT);
+    } else {
+      //Creating a new one
+      // toast("ChatRoom not created", Toast.LENGTH_SHORT);
+      ChatRoomModel newChatroom = ChatRoomModel(
+        charRoomId: uuid.v1(),
+        lastMessage: "",
+        participants: {
+          widget.userModel.uid.toString(): true,
+          targetUser.uid.toString(): true,
+        },
+      );
+
+      await FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(newChatroom.charRoomId)
+          .set(newChatroom.toMap());
+      toast("New Chatroom created.", Toast.LENGTH_SHORT);
+    }
+
+    return chatRoomModel;
   }
 }
