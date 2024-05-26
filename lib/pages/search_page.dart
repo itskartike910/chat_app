@@ -1,13 +1,14 @@
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/chat_page.dart';
-import 'package:chat_app/widgets/consts.dart';
-import 'package:chat_app/widgets/form_button.dart';
-import 'package:chat_app/widgets/form_container.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/form_button.dart';
+import 'package:chat_app/helper/widgets/form_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/main.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
   final UserModel userModel;
@@ -27,9 +28,9 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'ChatBox',
-          style: TextStyle(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -201,17 +202,18 @@ class _SearchPageState extends State<SearchPage> {
       //Creating a new one
       // toast("ChatRoom not created", Toast.LENGTH_SHORT);
       ChatRoomModel newChatroom = ChatRoomModel(
-        charRoomId: uuid.v1(),
+        chatRoomId: uuid.v1(),
         lastMessage: "",
         participants: {
           widget.userModel.uid.toString(): true,
           targetUser.uid.toString(): true,
         },
+        lastMessageTime: DateTime.now(),
       );
 
       await FirebaseFirestore.instance
           .collection("chatrooms")
-          .doc(newChatroom.charRoomId)
+          .doc(newChatroom.chatRoomId)
           .set(newChatroom.toMap());
       // toast("New Chatroom created.", Toast.LENGTH_SHORT);
       chatRoomModel = newChatroom;

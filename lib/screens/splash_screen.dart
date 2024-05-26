@@ -1,4 +1,4 @@
-import 'package:chat_app/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

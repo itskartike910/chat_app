@@ -1,8 +1,9 @@
 import 'package:chat_app/main.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/message_model.dart';
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
-import 'package:chat_app/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,10 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
-          onTap: (){
+          splashColor: Colors.lightBlue,
+          radius: 40,
+          borderRadius: BorderRadius.circular(30),
+          onTap: () {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -81,12 +85,12 @@ class _ChatPageState extends State<ChatPage> {
                   break;
                 case 'Clear Chat':
                   // Clear chat logic
-                  FirebaseFirestore.instance
-                      .collection("chatrooms")
-                      .doc(widget.chatroom.charRoomId)
-                      .collection("messaages")
-                      .doc()
-                      .delete();
+                  // FirebaseFirestore.instance
+                  //     .collection("chatrooms")
+                  //     .doc(widget.chatroom.charRoomId)
+                  //     .collection("messaages")
+                  //     .doc()
+                  //     .delete();
                   break;
                 case 'Report & Block':
                   // Block user logic
@@ -130,7 +134,7 @@ class _ChatPageState extends State<ChatPage> {
                   child: StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection("chatrooms")
-                          .doc(widget.chatroom.charRoomId)
+                          .doc(widget.chatroom.chatRoomId)
                           .collection("messages")
                           .orderBy("timeStamp", descending: true)
                           .snapshots(),
@@ -153,13 +157,16 @@ class _ChatPageState extends State<ChatPage> {
                                 String formattedDate =
                                     DateFormat('MMMM d, yyyy')
                                         .format(currentMessage.timeStamp!);
+                                // setState(() {
                                 msgDate = formattedDate;
+                                // });
                                 return InkWell(
                                   onLongPress: () {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
+                                          backgroundColor: bgColor,
                                           title: const Text("Delete Message"),
                                           content: const Text(
                                               "Are you sure you want to delete this message?"),
@@ -176,7 +183,7 @@ class _ChatPageState extends State<ChatPage> {
                                                 FirebaseFirestore.instance
                                                     .collection("chatrooms")
                                                     .doc(widget
-                                                        .chatroom.charRoomId)
+                                                        .chatroom.chatRoomId)
                                                     .collection("messages")
                                                     .doc(currentMessage
                                                         .messageId)
@@ -223,7 +230,7 @@ class _ChatPageState extends State<ChatPage> {
                                               maxLines: null,
                                               style: GoogleFonts.ubuntu(
                                                   color: Colors.black,
-                                                  fontSize: 15,
+                                                  fontSize: messageFontSize,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                             Text(
@@ -337,18 +344,19 @@ class _ChatPageState extends State<ChatPage> {
 
       FirebaseFirestore.instance
           .collection("chatrooms")
-          .doc(widget.chatroom.charRoomId)
+          .doc(widget.chatroom.chatRoomId)
           .collection("messages")
           .doc(newMessage.messageId)
           .set(newMessage.toMap());
 
       widget.chatroom.lastMessage = msg;
+      widget.chatroom.lastMessageTime = newMessage.timeStamp;
       FirebaseFirestore.instance
           .collection("chatrooms")
-          .doc(widget.chatroom.charRoomId)
+          .doc(widget.chatroom.chatRoomId)
           .set(widget.chatroom.toMap());
 
-      toast("Message sent", Toast.LENGTH_SHORT);
+      UIHelper.toast("Message sent", Toast.LENGTH_SHORT, ToastGravity.TOP);
     }
   }
 }

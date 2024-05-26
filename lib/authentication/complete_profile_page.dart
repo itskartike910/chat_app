@@ -1,15 +1,17 @@
 import 'dart:io';
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/home_page.dart';
-import 'package:chat_app/widgets/consts.dart';
-import 'package:chat_app/widgets/form_button.dart';
-import 'package:chat_app/widgets/form_container.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/form_button.dart';
+import 'package:chat_app/helper/widgets/form_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -31,9 +33,9 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'ChatBox',
-          style: TextStyle(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -231,9 +233,9 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
   void checkValues() {
     String fname = fullName.text.trim();
     if (fname == "") {
-      toast("Please enter your name!!", Toast.LENGTH_SHORT);
+      UIHelper.toast("Please enter your name!!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
     } else if (imageFile == null) {
-      toast("Please insert your image!!", Toast.LENGTH_SHORT);
+      UIHelper.toast("Please insert your image!!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
     } else {
       uploadData();
     }
@@ -258,7 +260,7 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
           .doc(widget.userModel.uid)
           .set(widget.userModel.toMap())
           .then((value) {
-        toast("Data Uploaded...", Toast.LENGTH_LONG);
+        UIHelper.toast("Data Uploaded...", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -268,7 +270,7 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                     ))).then((result) {});
       });
     } catch (e) {
-      toast("Error uploading data: $e", Toast.LENGTH_LONG);
+      UIHelper.toast("Error uploading data: $e", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
   }
 }

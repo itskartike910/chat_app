@@ -1,14 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app/authentication/signup_page.dart';
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:chat_app/widgets/form_button.dart';
-import 'package:chat_app/widgets/form_container.dart';
+import 'package:chat_app/helper/widgets/form_button.dart';
+import 'package:chat_app/helper/widgets/form_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,9 +27,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'ChatBox',
-          style: TextStyle(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -115,7 +119,8 @@ class _LoginPageState extends State<LoginPage> {
     String pass = password.text.trim();
 
     if (email == "" || pass == "") {
-      toast("Please fill all the fields!", Toast.LENGTH_LONG);
+      UIHelper.toast("Please fill all the fields!", Toast.LENGTH_LONG,
+          ToastGravity.BOTTOM);
     } else {
       logIn(email, pass);
     }
@@ -123,13 +128,15 @@ class _LoginPageState extends State<LoginPage> {
 
   void logIn(String email, String pass) async {
     UserCredential? credential;
+    UIHelper.showLoadingDialog(context, "Logging In...");
 
     try {
       credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pass);
     } on FirebaseAuthException catch (ex) {
       String str = ex.code.toString();
-      toast(str, Toast.LENGTH_LONG);
+      Navigator.pop(context);
+      UIHelper.toast(str, Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
 
     if (credential != null) {
@@ -138,14 +145,12 @@ class _LoginPageState extends State<LoginPage> {
       DocumentSnapshot userData =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
-      // ignore: unused_local_variable
       UserModel usermodel =
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
-      toast("LogIn Successful", Toast.LENGTH_SHORT);
-
+      UIHelper.toast("LogIn Successful", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+      Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(

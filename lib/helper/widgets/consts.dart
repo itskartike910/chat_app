@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 const bgColor = Color.fromARGB(255, 136, 255, 239);
@@ -31,14 +30,3 @@ Widget sizeHor(double width) {
   );
 }
 
-void toast(String message, Toast length) {
-  Fluttertoast.showToast(
-    msg: message,
-    toastLength: length,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 2,
-    backgroundColor: blueColor,
-    textColor: primaryColor,
-    fontSize: 16.0,
-  );
-}

@@ -1,13 +1,15 @@
 import 'package:chat_app/authentication/complete_profile_page.dart';
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
-import 'package:chat_app/widgets/form_button.dart';
-import 'package:chat_app/widgets/form_container.dart';
+import 'package:chat_app/helper/widgets/form_button.dart';
+import 'package:chat_app/helper/widgets/form_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:chat_app/widgets/consts.dart';
+import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -25,9 +27,9 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'ChatBox',
-          style: TextStyle(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -122,9 +124,9 @@ class _SignupPageState extends State<SignupPage> {
     String cnfpass = cnfpassword.text.trim();
 
     if (email == "" || pass == "" || cnfpass == "") {
-      toast("Please fill all the fields!", Toast.LENGTH_LONG);
+      UIHelper.toast("Please fill all the fields!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     } else if (pass != cnfpass) {
-      toast("Passwords do not match!", Toast.LENGTH_LONG);
+      UIHelper.toast("Passwords do not match!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     } else {
       signUp(email, pass);
     }
@@ -138,7 +140,7 @@ class _SignupPageState extends State<SignupPage> {
           .createUserWithEmailAndPassword(email: email, password: pass);
     } on FirebaseAuthException catch (ex) {
       String str = ex.code.toString();
-      toast(str, Toast.LENGTH_LONG);
+      UIHelper.toast(str, Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
 
     if (credential != null) {
@@ -157,7 +159,7 @@ class _SignupPageState extends State<SignupPage> {
           .set(newUser.toMap())
           .then(
             (value) => {
-              toast("SignUp Successful..New User Created!", Toast.LENGTH_SHORT),
+              UIHelper.toast("SignUp Successful..New User Created!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM),
               Navigator.pop(context),
               Navigator.pushReplacement(
                 context,
