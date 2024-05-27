@@ -4,6 +4,7 @@ import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
+import 'package:chat_app/pages/profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,15 +41,17 @@ class _ChatPageState extends State<ChatPage> {
           radius: 40,
           borderRadius: BorderRadius.circular(30),
           onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ProfilePage(
-            //       userModel: widget.chatUser,
-            //       firebaseUser: widget.firebaseUser,
-            //     ),
-            //   ),
-            // );
+            Future.delayed(const Duration(milliseconds: 100,), (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    user: widget.chatUser,
+                    currentUser: false,
+                  ),
+                ),
+              );
+            });
           },
           child: Row(
             children: [

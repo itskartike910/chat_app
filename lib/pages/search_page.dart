@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/chat_page.dart';
@@ -8,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
@@ -137,13 +141,14 @@ class _SearchPageState extends State<SearchPage> {
                                   size: 25,
                                 ),
                                 onTap: () async {
+                                  UIHelper.showLoadingDialog(
+                                      context, "Getting into the ChatRoom...");
                                   ChatRoomModel? chatRoomModel =
                                       await getChatRoom(searchedUser);
                                   if (chatRoomModel != null) {
-                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
                                     Navigator.pop(context);
                                     Navigator.push(
-                                      // ignore: use_build_context_synchronously
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ChatPage(
@@ -201,6 +206,7 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       //Creating a new one
       // toast("ChatRoom not created", Toast.LENGTH_SHORT);
+      UIHelper.showLoadingDialog(context, "Creating Chat Room...");
       ChatRoomModel newChatroom = ChatRoomModel(
         chatRoomId: uuid.v1(),
         lastMessage: "",
@@ -208,6 +214,7 @@ class _SearchPageState extends State<SearchPage> {
           widget.userModel.uid.toString(): true,
           targetUser.uid.toString(): true,
         },
+        users: [widget.userModel.uid.toString(), targetUser.uid.toString()],
         lastMessageTime: DateTime.now(),
       );
 
@@ -215,7 +222,9 @@ class _SearchPageState extends State<SearchPage> {
           .collection("chatrooms")
           .doc(newChatroom.chatRoomId)
           .set(newChatroom.toMap());
-      // toast("New Chatroom created.", Toast.LENGTH_SHORT);
+      Navigator.pop(context);
+      UIHelper.toast(
+          "New Chatroom created.", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
       chatRoomModel = newChatroom;
     }
     return chatRoomModel;

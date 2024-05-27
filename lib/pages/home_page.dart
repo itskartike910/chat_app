@@ -1,8 +1,10 @@
 import 'package:chat_app/authentication/login_page.dart';
+import 'package:chat_app/main.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/chat_page.dart';
+import 'package:chat_app/pages/profile_page.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:chat_app/helper/widgets/form_button.dart';
@@ -22,6 +24,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    setupFirebaseMessaging();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,16 +103,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                     textAlign: TextAlign.justify,
                   ),
-                  // Text(
-                  //   "Email: ${widget.userModel.email!}",
-                  //   style: const TextStyle(
-                  //     fontSize: 20,
-                  //     fontWeight: FontWeight.bold,
-                  //     backgroundColor: Color.fromARGB(255, 120, 230, 255),
-                  //   ),
-                  //   textAlign: TextAlign.center,
-                  //   softWrap: true,
-                  // ),
+                  FormButtonWidget(
+                    text: "Account",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(
+                            user: widget.userModel,
+                            currentUser: true,
+                          ),
+                        ),
+                      );
+                    },
+                    backgroundColor: const Color.fromARGB(100, 185, 185, 255),
+                    textColor: Colors.black,
+                  ),
+                  FormButtonWidget(
+                    text: "Settings",
+                    onPressed: () {},
+                    backgroundColor: const Color.fromARGB(100, 185, 185, 255),
+                    textColor: Colors.black,
+                  ),
                 ],
               ),
             ),
@@ -120,9 +140,9 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.justify,
             ),
             FormButtonWidget(
-              text: "Settings",
+              text: "Change Password",
               onPressed: () {},
-              backgroundColor: const Color.fromARGB(99, 187, 183, 255),
+              backgroundColor: const Color.fromARGB(100, 185, 185, 255),
               textColor: Colors.black,
             ),
             FormButtonWidget(
@@ -139,7 +159,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-            )
+            ),
+            Text("Made with ❤️ by Kartik.", textAlign: TextAlign.left,style: GoogleFonts.playfair(
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+              color: Colors.red,
+            ),),
           ],
         ),
       ),
@@ -175,8 +200,8 @@ class _HomePageState extends State<HomePage> {
           child: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("chatrooms")
-                .where("participants.${widget.userModel.uid}", isEqualTo: true)
-                // .orderBy("lastMessageTime", descending: true)
+                .where("users", arrayContains: widget.userModel.uid)
+                .orderBy("lastMessageTime", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {

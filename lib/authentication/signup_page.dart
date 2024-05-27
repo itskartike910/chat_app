@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app/authentication/complete_profile_page.dart';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -124,9 +126,11 @@ class _SignupPageState extends State<SignupPage> {
     String cnfpass = cnfpassword.text.trim();
 
     if (email == "" || pass == "" || cnfpass == "") {
-      UIHelper.toast("Please fill all the fields!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+      UIHelper.toast("Please fill all the fields!", Toast.LENGTH_LONG,
+          ToastGravity.BOTTOM);
     } else if (pass != cnfpass) {
-      UIHelper.toast("Passwords do not match!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+      UIHelper.toast(
+          "Passwords do not match!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     } else {
       signUp(email, pass);
     }
@@ -134,12 +138,14 @@ class _SignupPageState extends State<SignupPage> {
 
   void signUp(String email, String pass) async {
     UserCredential? credential;
+    UIHelper.showLoadingDialog(context, "Signing Up...");
 
     try {
       credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: pass);
     } on FirebaseAuthException catch (ex) {
       String str = ex.code.toString();
+      Navigator.popUntil(context, (route) => route.isFirst);
       UIHelper.toast(str, Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
 
@@ -159,8 +165,9 @@ class _SignupPageState extends State<SignupPage> {
           .set(newUser.toMap())
           .then(
             (value) => {
-              UIHelper.toast("SignUp Successful..New User Created!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM),
-              Navigator.pop(context),
+              UIHelper.toast("SignUp Successful..New User Created!",
+                  Toast.LENGTH_SHORT, ToastGravity.BOTTOM),
+              Navigator.popUntil(context, (route) => route.isFirst),
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

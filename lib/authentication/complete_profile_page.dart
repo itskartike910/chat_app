@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -122,7 +124,7 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
               // ),
               sizeVer(10),
               FormButtonWidget(
-                text: 'Save',
+                text: 'Continue',
                 backgroundColor: Colors.purpleAccent,
                 textColor: Colors.black,
                 onPressed: () {
@@ -233,15 +235,18 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
   void checkValues() {
     String fname = fullName.text.trim();
     if (fname == "") {
-      UIHelper.toast("Please enter your name!!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+      UIHelper.toast(
+          "Please enter your name!!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
     } else if (imageFile == null) {
-      UIHelper.toast("Please insert your image!!", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+      UIHelper.toast("Please insert your image!!", Toast.LENGTH_SHORT,
+          ToastGravity.BOTTOM);
     } else {
       uploadData();
     }
   }
 
   void uploadData() async {
+    UIHelper.showLoadingDialog(context, "Uploading Data...");
     try {
       UploadTask uploadTask = FirebaseStorage.instance
           .ref("profilepictures")
@@ -260,17 +265,23 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
           .doc(widget.userModel.uid)
           .set(widget.userModel.toMap())
           .then((value) {
-        UIHelper.toast("Data Uploaded...", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomePage(
-                      userModel: widget.userModel,
-                      firebaseUser: widget.firebaseUser,
-                    ))).then((result) {});
+        UIHelper.toast(
+            "Data Uploaded...", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(
+              userModel: widget.userModel,
+              firebaseUser: widget.firebaseUser,
+            ),
+          ),
+        );
       });
     } catch (e) {
-      UIHelper.toast("Error uploading data: $e", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+      Navigator.pop(context);
+      UIHelper.toast(
+          "Error uploading data: $e", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
   }
 }
