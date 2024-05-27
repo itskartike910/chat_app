@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:chat_app/authentication/reset_password.dart';
 import 'package:chat_app/authentication/signup_page.dart';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -73,7 +74,29 @@ class _LoginPageState extends State<LoginPage> {
                     controller: password,
                     isPasswordField: true,
                   ),
-                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Forgot your Password?'),
+                      CupertinoButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ResetPasswordPage(),
+                            ),
+                          ).then((result) {});
+                        },
+                        child: const Text(
+                          'Reset Password',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: blueColor,
+                              fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
                   FormButtonWidget(
                     text: 'Log In',
                     backgroundColor: Colors.purpleAccent,
@@ -82,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       checkValues();
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -148,7 +171,8 @@ class _LoginPageState extends State<LoginPage> {
       UserModel usermodel =
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
-      UIHelper.toast("LogIn Successful", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+      UIHelper.toast(
+          "LogIn Successful", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
         context,

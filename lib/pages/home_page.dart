@@ -1,3 +1,4 @@
+import 'package:chat_app/authentication/change_password.dart';
 import 'package:chat_app/authentication/login_page.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/models/chat_room_model.dart';
@@ -141,7 +142,14 @@ class _HomePageState extends State<HomePage> {
             ),
             FormButtonWidget(
               text: "Change Password",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangePass(user: widget.userModel),
+                  ),
+                );
+              },
               backgroundColor: const Color.fromARGB(100, 185, 185, 255),
               textColor: Colors.black,
             ),
@@ -160,11 +168,15 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            Text("Made with ❤️ by Kartik.", textAlign: TextAlign.left,style: GoogleFonts.playfair(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: Colors.red,
-            ),),
+            Text(
+              "Made with ❤️ by Kartik.",
+              textAlign: TextAlign.left,
+              style: GoogleFonts.playfair(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: Colors.red,
+              ),
+            ),
           ],
         ),
       ),

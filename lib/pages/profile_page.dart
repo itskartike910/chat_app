@@ -58,6 +58,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       : null,
                 ),
               ),
+              const Text(
+                "___________________________________________________________________________________________________________________________________",
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: true,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.justify,
+              ),
               sizeVer(20),
               FormContainerWidget(
                 enabled: false,
@@ -71,15 +81,26 @@ class _ProfilePageState extends State<ProfilePage> {
                 inputType: TextInputType.emailAddress,
                 icon: Icons.email,
               ),
+              // sizeVer(10),
+              const Text(
+                "___________________________________________________________________________________________________________________________________",
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: true,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.justify,
+              ),
               sizeVer(10),
-              (widget.currentUser)? FormButtonWidget(
-                text: 'Edit Profile',
-                backgroundColor: Colors.purpleAccent,
-                textColor: Colors.black,
-                onPressed: () {
-                },
-              ) : const Text(""),
-
+              (widget.currentUser)
+                  ? FormButtonWidget(
+                      text: 'Edit Profile',
+                      backgroundColor: Colors.purpleAccent,
+                      textColor: Colors.black,
+                      onPressed: () {},
+                    )
+                  : const Text(""),
             ],
           ),
         ),

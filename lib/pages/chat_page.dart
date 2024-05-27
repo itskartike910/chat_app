@@ -83,17 +83,11 @@ class _ChatPageState extends State<ChatPage> {
             onSelected: (value) {
               // Handle the selected menu option
               switch (value) {
-                case 'Info':
+                case 'Search':
                   // Navigate to info page or show dialog
                   break;
                 case 'Clear Chat':
                   // Clear chat logic
-                  // FirebaseFirestore.instance
-                  //     .collection("chatrooms")
-                  //     .doc(widget.chatroom.charRoomId)
-                  //     .collection("messaages")
-                  //     .doc()
-                  //     .delete();
                   break;
                 case 'Report & Block':
                   // Block user logic
@@ -101,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
               }
             },
             itemBuilder: (BuildContext context) {
-              return {'Info', 'Clear Chat', 'Report & Block'}
+              return {'Search', 'Clear Chat', 'Report & Block'}
                   .map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
