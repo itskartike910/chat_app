@@ -8,6 +8,7 @@ import 'package:chat_app/pages/profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -31,9 +32,11 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   TextEditingController message = TextEditingController();
-  String msgDate = "";
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    // UIHelper.toast(
+    //     "ScreenWidth: $screenWidth", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
@@ -41,7 +44,10 @@ class _ChatPageState extends State<ChatPage> {
           radius: 40,
           borderRadius: BorderRadius.circular(30),
           onTap: () {
-            Future.delayed(const Duration(milliseconds: 100,), (){
+            Future.delayed(
+                const Duration(
+                  milliseconds: 100,
+                ), () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -85,6 +91,7 @@ class _ChatPageState extends State<ChatPage> {
               switch (value) {
                 case 'Search':
                   // Navigate to info page or show dialog
+                  // AlertDialog alertDialog = AlertDialog();
                   break;
                 case 'Clear Chat':
                   // Clear chat logic
@@ -106,7 +113,6 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      // endDrawer: Drawer(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -115,9 +121,10 @@ class _ChatPageState extends State<ChatPage> {
           child: Column(
             children: [
               Text(
-                msgDate,
+                DateFormat('MMMM d, yyyy')
+                    .format(widget.chatroom.lastMessageTime!),
                 style: GoogleFonts.play(
-                  color: Colors.black,
+                  color: txtColor,
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                 ),
@@ -151,12 +158,6 @@ class _ChatPageState extends State<ChatPage> {
                                             as Map<String, dynamic>);
                                 String formattedTime = DateFormat('h:mm a')
                                     .format(currentMessage.timeStamp!);
-                                String formattedDate =
-                                    DateFormat('MMMM d, yyyy')
-                                        .format(currentMessage.timeStamp!);
-                                // setState(() {
-                                msgDate = formattedDate;
-                                // });
                                 return InkWell(
                                   onLongPress: () {
                                     showDialog(
@@ -177,6 +178,9 @@ class _ChatPageState extends State<ChatPage> {
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
+                                                UIHelper.showLoadingDialog(
+                                                    context,
+                                                    "Deleting Message");
                                                 FirebaseFirestore.instance
                                                     .collection("chatrooms")
                                                     .doc(widget
@@ -185,6 +189,11 @@ class _ChatPageState extends State<ChatPage> {
                                                     .doc(currentMessage
                                                         .messageId)
                                                     .delete();
+                                                Navigator.pop(context);
+                                                UIHelper.toast(
+                                                    "Message Deleted",
+                                                    Toast.LENGTH_SHORT,
+                                                    ToastGravity.BOTTOM);
                                               },
                                               child: const Text("Yes"),
                                             ),
@@ -199,46 +208,80 @@ class _ChatPageState extends State<ChatPage> {
                                         ? MainAxisAlignment.end
                                         : MainAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 10,
-                                        ),
-                                        margin: const EdgeInsets.symmetric(
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: currentMessage.sender ==
-                                                  widget.firebaseUser.uid
-                                              ? Colors.green
-                                              : Colors.blue,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              currentMessage.sender ==
-                                                      widget.firebaseUser.uid
-                                                  ? CrossAxisAlignment.end
-                                                  : CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              currentMessage.message.toString(),
-                                              maxLines: null,
-                                              style: GoogleFonts.ubuntu(
-                                                  color: Colors.black,
-                                                  fontSize: messageFontSize,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              formattedTime,
-                                              style: GoogleFonts.quicksand(
-                                                color: Colors.white70,
-                                                fontSize: 10,
+                                      Flexible(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 10,
+                                          ),
+                                          constraints: BoxConstraints(
+                                            maxHeight: double.infinity,
+                                            maxWidth: (screenWidth * 4 / 5),
+                                          ),
+                                          margin: const EdgeInsets.symmetric(
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: currentMessage.sender ==
+                                                    widget.firebaseUser.uid
+                                                ? Colors.green
+                                                : Colors.blue,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                currentMessage.sender ==
+                                                        widget.firebaseUser.uid
+                                                    ? CrossAxisAlignment.end
+                                                    : CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                currentMessage.message
+                                                    .toString(),
+                                                maxLines: null,
+                                                softWrap: true,
+                                                overflow: TextOverflow.clip,
+                                                style: GoogleFonts.ubuntu(
+                                                    color: Colors.black,
+                                                    fontSize: messageFontSize,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
-                                            ),
-                                          ],
+                                              Text(
+                                                formattedTime,
+                                                maxLines: null,
+                                                softWrap: true,
+                                                overflow: TextOverflow.clip,
+                                                style: GoogleFonts.quicksand(
+                                                  color: Colors.white70,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            2, 0, 0, 0),
+                                        child: currentMessage.seen!
+                                            ? (currentMessage.sender ==
+                                                    widget.firebaseUser.uid)
+                                                ? const Icon(
+                                                    Icons.check_circle,
+                                                    color: Colors.green,
+                                                    size: 20,
+                                                  )
+                                                : const Text("")
+                                            : (currentMessage.sender ==
+                                                    widget.firebaseUser.uid)
+                                                ? const Icon(
+                                                    Icons.check_circle,
+                                                    color: Colors.grey,
+                                                    size: 20,
+                                                  )
+                                                : const Text(""),
                                       ),
                                     ],
                                   ),
@@ -264,7 +307,6 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
               Container(
-                // height: 70,
                 color: Colors.black12,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -274,23 +316,32 @@ class _ChatPageState extends State<ChatPage> {
                   child: Row(
                     children: [
                       Flexible(
-                        child: TextField(
-                          controller: message,
-                          maxLines: null,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: const InputDecoration(
-                            hintText: 'Type a message',
-                            hintStyle: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
+                        child: SingleChildScrollView(
+                          reverse: true,
+                          child: TextField(
+                            controller: message,
+                            enableInteractiveSelection: true,
+                            scrollPhysics: const BouncingScrollPhysics(),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            maxLength: null,
+                            textCapitalization:
+                                TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                              hintText: 'Type a message',
+                              hintStyle: GoogleFonts.ubuntu(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                fontSize: messageFontSize,
+                              ),
+                              border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                            style: GoogleFonts.ubuntu(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: messageFontSize,
                             ),
-                            // border: InputBorder.none
-                          ),
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
                       ),
@@ -306,16 +357,6 @@ class _ChatPageState extends State<ChatPage> {
                           applyTextScaling: true,
                         ),
                       ),
-                      // CupertinoButton(
-                      //   borderRadius:
-                      //       const BorderRadius.all(Radius.circular(20.0)),
-                      //   onPressed: () {},
-                      //   child: const Icon(
-                      //     Icons.send,
-                      //     color: Colors.green,
-                      //     size: 25,
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -324,7 +365,6 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ),
       ),
-      // endDrawer: Drawer(),
     );
   }
 

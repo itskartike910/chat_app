@@ -1,5 +1,7 @@
+
 import 'package:chat_app/authentication/change_password.dart';
 import 'package:chat_app/authentication/login_page.dart';
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/helper/firebase_helper.dart';
@@ -9,9 +11,11 @@ import 'package:chat_app/pages/profile_page.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:chat_app/helper/widgets/form_button.dart';
+import 'package:chat_app/pages/settings_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,6 +51,32 @@ class _HomePageState extends State<HomePage> {
         shadowColor: const Color.fromARGB(255, 36, 255, 215),
         elevation: 5,
         foregroundColor: Colors.black,
+        actions: [
+          PopupMenuButton<String>(
+            color: bgColor,
+            elevation: 5,
+            shadowColor: const Color.fromARGB(255, 36, 255, 215),
+            iconSize: 25,
+            onSelected: (value) {
+              // Handle the selected menu option
+              switch (value) {
+                case 'About App':
+                  // Navigate to info page or show dialog
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {
+                'About App',
+              }.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         elevation: 5,
@@ -58,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: ListView(
                 children: [
-                  sizeVer(20),
+                  sizeVer(10),
                   Center(
                     child: CircleAvatar(
                       backgroundImage:
@@ -67,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                       radius: 60,
                     ),
                   ),
-                  sizeVer(20),
+                  // sizeVer(20),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: Text(
@@ -122,7 +152,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                   FormButtonWidget(
                     text: "Settings",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsPage(),
+                        ),
+                      );
+                    },
                     backgroundColor: const Color.fromARGB(100, 185, 185, 255),
                     textColor: Colors.black,
                   ),
@@ -241,49 +278,95 @@ class _HomePageState extends State<HomePage> {
                                 if (userData.data != null) {
                                   UserModel targetUser =
                                       userData.data as UserModel;
-                                  return Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.orangeAccent,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                      title: Text(
-                                        targetUser.name.toString(),
-                                        style: GoogleFonts.ubuntu(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 18),
+                                  return InkWell(
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Delete Chat"),
+                                            content: const Text(
+                                                "Are you sure you want to delete this chat?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("No"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  Navigator.pop(context);
+                                                  UIHelper.showLoadingDialog(
+                                                      context, "Deleting Chat");
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("chatrooms")
+                                                      .doc(chatRoomModel
+                                                          .chatRoomId)
+                                                      .delete();
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.pop(context);
+                                                  UIHelper.toast(
+                                                      "Chat Deleted",
+                                                      Toast.LENGTH_SHORT,
+                                                      ToastGravity.BOTTOM);
+                                                },
+                                                child: const Text("Yes"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.orangeAccent,
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                      subtitle: Text(
-                                        chatRoomModel.lastMessage.toString(),
-                                        style: const TextStyle(
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
+                                        title: Text(
+                                          targetUser.name.toString(),
+                                          style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 18),
+                                        ),
+                                        subtitle: Text(
+                                          chatRoomModel.lastMessage.toString(),
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 14),
-                                      ),
-                                      titleAlignment:
-                                          ListTileTitleAlignment.center,
-                                      leading: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            targetUser.profilepic!),
-                                        radius: 22,
-                                      ),
-                                      onTap: () async {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ChatPage(
-                                              userModel: widget.userModel,
-                                              firebaseUser: widget.firebaseUser,
-                                              chatUser: targetUser,
-                                              chatroom: chatRoomModel,
-                                            ),
+                                            fontSize: 14,
                                           ),
-                                        );
-                                      },
+                                        ),
+                                        titleAlignment:
+                                            ListTileTitleAlignment.center,
+                                        leading: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              targetUser.profilepic!),
+                                          radius: 22,
+                                        ),
+                                        onTap: () async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                userModel: widget.userModel,
+                                                firebaseUser:
+                                                    widget.firebaseUser,
+                                                chatUser: targetUser,
+                                                chatroom: chatRoomModel,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   );
                                 } else {

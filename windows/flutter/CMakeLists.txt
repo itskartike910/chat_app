@@ -70,6 +70,7 @@ target_include_directories(flutter_wrapper_plugin PUBLIC
   "${WRAPPER_ROOT}/include"
 )
 add_dependencies(flutter_wrapper_plugin flutter_assemble)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 # Wrapper sources needed for the runner.
 add_library(flutter_wrapper_app STATIC

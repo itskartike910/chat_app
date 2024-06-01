@@ -33,30 +33,29 @@ class _LoginPageState extends State<LoginPage> {
           style: GoogleFonts.playfairDisplay(
             fontSize: 30,
             fontWeight: FontWeight.bold,
+            color: titleColor,
           ),
         ),
-        backgroundColor: bgColor,
+        backgroundColor: appBarColor,
         centerTitle: true,
-        shadowColor: const Color.fromARGB(255, 36, 255, 215),
+        shadowColor: appBarShadowColor,
         elevation: 5,
-        foregroundColor: Colors.black,
       ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: gradientBackground,
-          ),
+          color: backgroundScreenColor,
           child: Center(
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     'Log In',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
+                      color: txtColor,
                     ),
                   ),
                   FormContainerWidget(
@@ -100,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   FormButtonWidget(
                     text: 'Log In',
                     backgroundColor: Colors.purpleAccent,
-                    textColor: Colors.black,
+                    textColor: txtColor,
                     onPressed: () {
                       checkValues();
                     },

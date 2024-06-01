@@ -52,7 +52,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: TextFormField(
-          style: const TextStyle(color: Colors.black),
+          style:  TextStyle(color: txtColor),
           controller: widget.controller,
           keyboardType: widget.inputType,
           key: widget.fieldKey,
@@ -73,7 +73,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
             ),
             filled: true,
-            fillColor: const Color.fromARGB(255, 192, 254, 224),
+            fillColor: formContainerFillColor,
             hintText: widget.hintText,
             prefixIcon: Icon(
               widget.icon,
