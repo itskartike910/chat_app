@@ -1,9 +1,11 @@
+import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:chat_app/helper/widgets/form_button.dart';
 import 'package:chat_app/helper/widgets/form_container.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -69,15 +71,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 textAlign: TextAlign.justify,
               ),
               sizeVer(20),
-              FormContainerWidget(
-                enabled: false,
-                hintText: 'Name: ${widget.user.name}',
-                inputType: TextInputType.name,
-                icon: Icons.person,
+              Text(
+                "Name",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               FormContainerWidget(
                 enabled: false,
-                hintText: "Email: ${widget.user.email}",
+                hintText: widget.user.name,
+                inputType: TextInputType.name,
+                icon: Icons.person,
+              ),
+              sizeVer(20),
+              Text(
+                "Email",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              FormContainerWidget(
+                enabled: false,
+                hintText: widget.user.email,
                 inputType: TextInputType.emailAddress,
                 icon: Icons.email,
               ),
@@ -98,7 +117,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       text: 'Edit Profile',
                       backgroundColor: Colors.purpleAccent,
                       textColor: Colors.black,
-                      onPressed: () {},
+                      onPressed: () {
+                        UIHelper.toast("This feature will be available soon!",
+                            Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+                      },
                     )
                   : const Text(""),
             ],

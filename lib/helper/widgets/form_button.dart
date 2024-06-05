@@ -6,13 +6,15 @@ class FormButtonWidget extends StatefulWidget {
   final String? text;
   final Color? backgroundColor;
   final Color? textColor;
+  final String imagePath;
   final void Function()? onPressed;
-  
+
   const FormButtonWidget({
     super.key,
     required this.text,
     this.backgroundColor,
     this.textColor,
+    this.imagePath = "",
     required this.onPressed,
   });
 
@@ -30,7 +32,7 @@ class _FormButtonWidgetState extends State<FormButtonWidget> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: InkWell(
           splashColor: blueColor,
           child: CupertinoButton(
@@ -40,13 +42,28 @@ class _FormButtonWidgetState extends State<FormButtonWidget> {
             borderRadius: const BorderRadius.all(Radius.circular(30.0)),
             color: widget.backgroundColor,
             disabledColor: Colors.grey,
-            child: Text(
-              widget.text as String,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: widget.textColor,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                (widget.imagePath != "")
+                    ? Image.asset(
+                        widget.imagePath,
+                        height: 18,
+                        width: 18,
+                      )
+                    : const Text(""),
+                (widget.imagePath != "") ? sizeHor(10) : sizeHor(0),
+                Text(
+                  widget.text as String,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: widget.textColor,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

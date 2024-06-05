@@ -1,4 +1,3 @@
-
 import 'package:chat_app/authentication/change_password.dart';
 import 'package:chat_app/authentication/login_page.dart';
 import 'package:chat_app/helper/ui_helper.dart';
@@ -195,13 +194,40 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  // ignore: use_build_context_synchronously
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Log Out"),
+                      content: const Text("Are you sure you want to log out?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("No"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            UIHelper.showLoadingDialog(
+                                context, "Logging Out...");
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                            UIHelper.toast("Successfully Logged Out.",
+                                Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+                          },
+                          child: const Text("Yes"),
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),
@@ -296,17 +322,17 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               TextButton(
                                                 onPressed: () async {
-                                                  Navigator.pop(context);
                                                   UIHelper.showLoadingDialog(
-                                                      context, "Deleting Chat");
+                                                      context,
+                                                      "Deleting Chat...");
                                                   await FirebaseFirestore
                                                       .instance
                                                       .collection("chatrooms")
                                                       .doc(chatRoomModel
                                                           .chatRoomId)
                                                       .delete();
-                                                  // ignore: use_build_context_synchronously
-                                                  Navigator.pop(context);
+                                                  Navigator.popUntil(context,
+                                                      (route) => route.isFirst);
                                                   UIHelper.toast(
                                                       "Chat Deleted",
                                                       Toast.LENGTH_SHORT,
@@ -337,7 +363,12 @@ class _HomePageState extends State<HomePage> {
                                               fontSize: 18),
                                         ),
                                         subtitle: Text(
-                                          chatRoomModel.lastMessage.toString(),
+                                          chatRoomModel.lastMessage
+                                                      .toString() !=
+                                                  ""
+                                              ? chatRoomModel.lastMessage
+                                                  .toString()
+                                              : "Say Hii to your new friend!!",
                                           maxLines: 1,
                                           softWrap: true,
                                           style: const TextStyle(

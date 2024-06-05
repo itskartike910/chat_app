@@ -131,29 +131,29 @@ class _CompleteProfileState extends State<CompleteProfilePage> {
                   checkValues();
                 },
               ),
-              sizeVer(10),
-              const Text(
-                "Or Do it later?",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              FormButtonWidget(
-                text: 'Continue',
-                backgroundColor: Colors.purpleAccent,
-                textColor: Colors.black,
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(
-                                userModel: widget.userModel,
-                                firebaseUser: widget.firebaseUser,
-                              ))).then((result) {});
-                },
-              ),
+              // sizeVer(10),
+              // const Text(
+              //   "Or Do it later?",
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              // FormButtonWidget(
+              //   text: 'Continue',
+              //   backgroundColor: Colors.purpleAccent,
+              //   textColor: Colors.black,
+              //   onPressed: () {
+              //     Navigator.pushReplacement(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => HomePage(
+              //                   userModel: widget.userModel,
+              //                   firebaseUser: widget.firebaseUser,
+              //                 ))).then((result) {});
+              //   },
+              // ),
             ],
           ),
         ),

@@ -1,10 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:chat_app/authentication/complete_profile_page.dart';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/helper/widgets/form_button.dart';
 import 'package:chat_app/helper/widgets/form_container.dart';
+import 'package:chat_app/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -90,6 +90,23 @@ class _SignupPageState extends State<SignupPage> {
                     textColor: Colors.black,
                     onPressed: () {
                       checkValues();
+                    },
+                  ),
+                  Text(
+                    "Or",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  FormButtonWidget(
+                    text: "Sign Up using Google",
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                    imagePath: "assets/googleicon.png",
+                    onPressed: () async {
+                      await signInWithGoogle();
                     },
                   ),
                   const SizedBox(height: 20),
@@ -179,6 +196,51 @@ class _SignupPageState extends State<SignupPage> {
               )
             },
           );
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      UIHelper.showLoadingDialog(context, "Signing Up with Google...");
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final UserCredential authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = authResult.user;
+      UserModel userModel = UserModel(
+        uid: user!.uid,
+        email: user.email!,
+        name: user.displayName!,
+        profilepic: user.photoURL!,
+      );
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(userModel.toMap())
+          .then(
+            (value) => {
+              UIHelper.toast("Google Sign-In Successful: ${user.displayName}",
+                  Toast.LENGTH_SHORT, ToastGravity.BOTTOM),
+              Navigator.popUntil(context, (route) => route.isFirst),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    userModel: userModel,
+                    firebaseUser: user,
+                  ),
+                ),
+              ),
+            },
+          );
+    } catch (e) {
+      UIHelper.toast("Error during Google Sign-In: $e", Toast.LENGTH_SHORT,
+          ToastGravity.BOTTOM);
     }
   }
 }

@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -104,6 +105,23 @@ class _LoginPageState extends State<LoginPage> {
                       checkValues();
                     },
                   ),
+                  Text(
+                    "Or",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  FormButtonWidget(
+                    text: "Log In using Google",
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                    imagePath: "assets/googleicon.png",
+                    onPressed: () async {
+                      await logInWithGoogle();
+                    },
+                  ),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -171,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
       UIHelper.toast(
-          "LogIn Successful", Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
+          "Welcome Back - ${usermodel.name}", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
         context,
@@ -182,6 +200,58 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> logInWithGoogle() async {
+    UIHelper.showLoadingDialog(context, "Logging In with Google...");
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        User? user = userCredential.user;
+        if (user != null) {
+          DocumentSnapshot userData = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(user.uid)
+              .get();
+          if (userData.exists) {
+            UserModel usermodel =
+                UserModel.fromMap(userData.data() as Map<String, dynamic>);
+            UIHelper.toast(
+                "Welcome Back - ${usermodel.name}", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  userModel: usermodel,
+                  firebaseUser: user,
+                ),
+              ),
+            );
+          } else {
+            UIHelper.toast(
+                "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+          }
+        } else {
+          UIHelper.toast(
+              "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+        }
+      } else {
+        UIHelper.toast(
+            "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      UIHelper.toast("Error: $e", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
   }
 }

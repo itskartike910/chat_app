@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:chat_app/authentication/login_page.dart';
 import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:chat_app/helper/ui_helper.dart';
