@@ -188,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
       UserModel usermodel =
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
-      UIHelper.toast(
-          "Welcome Back - ${usermodel.name}", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+      UIHelper.toast("Welcome Back - ${usermodel.name}", Toast.LENGTH_LONG,
+          ToastGravity.BOTTOM);
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
         context,
@@ -225,8 +225,8 @@ class _LoginPageState extends State<LoginPage> {
           if (userData.exists) {
             UserModel usermodel =
                 UserModel.fromMap(userData.data() as Map<String, dynamic>);
-            UIHelper.toast(
-                "Welcome Back - ${usermodel.name}", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+            UIHelper.toast("Welcome Back - ${usermodel.name}",
+                Toast.LENGTH_LONG, ToastGravity.BOTTOM);
             Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.pushReplacement(
               context,
@@ -238,16 +238,19 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           } else {
+            Navigator.pop(context);
             UIHelper.toast(
-                "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+                "User not found, Please signup first!!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
           }
         } else {
+          Navigator.pop(context);
           UIHelper.toast(
-              "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+              "User not found, Please signup first!!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
         }
       } else {
+        Navigator.pop(context);
         UIHelper.toast(
-            "User not found", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
+            "User not found, Please signup first!!", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
       }
     } catch (e) {
       Navigator.pop(context);
