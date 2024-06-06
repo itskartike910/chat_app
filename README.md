@@ -2,14 +2,13 @@
 
 # ChatBox - Flutter Chat Application
 
-ChatBox is a real-time chat application built with Flutter and Firebase. It allows users to sign up, log in, chat with other users, and receive notifications for new messages.
+ChatBox is a real-time chat application built with Flutter and Firebase. It allows users to sign up, log in, chat with other users.
 
 ## Features
 
 - **User Authentication**: Sign up and log in using email and password.
 - **Real-time Messaging**: Send and receive messages in real-time.
 - **User Profile**: View and update user profile information.
-- **Push Notifications**: Receive notifications for new messages.
 - **Search Users**: Search for other users to start a chat.
 
 ## Screenshots
@@ -24,6 +23,10 @@ ChatBox is a real-time chat application built with Flutter and Firebase. It allo
 - Firebase Account: [Create a Firebase Project](https://console.firebase.google.com/)
 
 ### Installation
+
+**For installation go to releases and download the latest version of apk and install on your android device**
+
+or you can,
 
 1. **Clone the repository:**
    ```bash
@@ -71,10 +74,6 @@ Users can sign up and log in using their email and password. The authentication 
 
 Users can chat in real-time with other users. Messages are stored in Firestore under `chatrooms` collection.
 
-### Notifications
-
-Firebase Cloud Messaging is used to send push notifications for new messages. Notifications are handled using the `firebase_messaging` package.
-
 ### User Profile
 
 Users can view and update their profile information. Profile pictures are stored in Firebase Storage.
@@ -90,13 +89,6 @@ Users can view and update their profile information. Profile pictures are stored
   - **widgets**: Custom widgets used in the app.
   - `main.dart`: Entry point of the application.
 
-## Notifications
-
-To enable notifications:
-
-1. Ensure you have configured Firebase Cloud Messaging correctly.
-2. Initialize Firebase Messaging and Local Notifications in `main.dart`.
-3. Handle message reception and display notifications using `flutter_local_notifications` package.
 
 ## Dependencies
 
@@ -106,6 +98,5 @@ To enable notifications:
 - `cloud_firestore`
 - `firebase_messaging`
 - `firebase_storage`
-- `flutter_local_notifications`
 - `google_fonts`
 - `uuid`
