@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -28,6 +26,29 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
   String txt = "";
+
+  bool isEmail(String input) {
+    return RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+        .hasMatch(input);
+  }
+
+  Stream<QuerySnapshot> buildQuery() {
+    String searchText = searchController.text.trim();
+    if (isEmail(searchText)) {
+      return FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: searchText)
+          .where("email",
+              isNotEqualTo: widget.userModel.email!.trim().toString())
+          .snapshots();
+    } else {
+      return FirebaseFirestore.instance
+          .collection("users")
+          .where("name", isEqualTo: searchText)
+          .snapshots();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,16 +78,26 @@ class _SearchPageState extends State<SearchPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text(
+                    Text(
                       'Search for a User',
-                      style: TextStyle(
+                      style: GoogleFonts.playfair(
                         fontSize: 26,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
+                    sizeVer(5),
+                    Text(
+                      "Search for a user by his/her Email or exact Name..",
+                      style: GoogleFonts.playfair(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    sizeVer(10),
                     FormContainerWidget(
                       labelText: 'Search',
-                      hintText: 'Email Address',
+                      hintText: 'Email Address or Name',
                       inputType: TextInputType.text,
                       controller: searchController,
                     ),
@@ -91,15 +122,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     sizeVer(10),
                     StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("users")
-                          .where("email",
-                              isEqualTo:
-                                  searchController.text.trim().toString())
-                          .where("email",
-                              isNotEqualTo:
-                                  widget.userModel.email!.trim().toString())
-                          .snapshots(),
+                      stream: buildQuery(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.active) {
@@ -163,14 +186,11 @@ class _SearchPageState extends State<SearchPage> {
                                 },
                               );
                             } else {
-                              // toast("No Result Found!!", Toast.LENGTH_LONG);
                               return const Text("No Results Found!!");
                             }
                           } else if (snapshot.hasError) {
-                            // toast("An error occured!!", Toast.LENGTH_LONG);
                             return const Text("An error occured!!");
                           } else {
-                            // toast("No Result Found!!", Toast.LENGTH_LONG);
                             return const Text("No Results Found!!");
                           }
                         } else {
@@ -197,15 +217,11 @@ class _SearchPageState extends State<SearchPage> {
         .get();
 
     if (snapshot.docs.isNotEmpty) {
-      //Fetching the existing one
-      // toast("ChatRoom already exists", Toast.LENGTH_SHORT);
       var docData = snapshot.docs[0].data();
       ChatRoomModel existingChatroom =
           ChatRoomModel.fromMap(docData as Map<String, dynamic>);
       chatRoomModel = existingChatroom;
     } else {
-      //Creating a new one
-      // toast("ChatRoom not created", Toast.LENGTH_SHORT);
       UIHelper.showLoadingDialog(context, "Creating Chat Room...");
       ChatRoomModel newChatroom = ChatRoomModel(
         chatRoomId: uuid.v1(),

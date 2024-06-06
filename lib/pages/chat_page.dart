@@ -92,6 +92,8 @@ class _ChatPageState extends State<ChatPage> {
                 case 'Search':
                   // Navigate to info page or show dialog
                   // AlertDialog alertDialog = AlertDialog();
+                  UIHelper.toast("Currently Implementing...",
+                      Toast.LENGTH_SHORT, ToastGravity.BOTTOM);
                   break;
                 case 'Clear Chat':
                   // Clear chat logic
@@ -121,7 +123,7 @@ class _ChatPageState extends State<ChatPage> {
           child: Column(
             children: [
               Text(
-                DateFormat('MMMM d, yyyy')
+                DateFormat('MMMM dd, yyyy')
                     .format(widget.chatroom.lastMessageTime!),
                 style: GoogleFonts.play(
                   color: txtColor,
@@ -156,8 +158,10 @@ class _ChatPageState extends State<ChatPage> {
                                     MessageModel.fromMap(
                                         dataSnapshot.docs[index].data()
                                             as Map<String, dynamic>);
-                                String formattedTime = DateFormat('h:mm a')
-                                    .format(currentMessage.timeStamp!);
+                                String formattedTime =
+                                    DateFormat('h:mm a - dd MMM')
+                                        .format(currentMessage.timeStamp!);
+                                currMsgSeen(currentMessage);
                                 return InkWell(
                                   onLongPress: () {
                                     showDialog(
@@ -254,9 +258,10 @@ class _ChatPageState extends State<ChatPage> {
                                                 softWrap: true,
                                                 overflow: TextOverflow.clip,
                                                 style: GoogleFonts.quicksand(
-                                                  color: Colors.white70,
-                                                  fontSize: 10,
-                                                ),
+                                                    color: Colors.white70,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ],
                                           ),
@@ -315,6 +320,16 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   child: Row(
                     children: [
+                      // IconButton(
+                      //   onPressed: () {},
+                      //   icon: const Icon(
+                      //     Icons.attach_file,
+                      //     color: Colors.green,
+                      //     size: 30,
+                      //     fill: BorderSide.strokeAlignCenter,
+                      //     applyTextScaling: true,
+                      //   ),
+                      // ),
                       Flexible(
                         child: SingleChildScrollView(
                           reverse: true,
@@ -325,8 +340,7 @@ class _ChatPageState extends State<ChatPage> {
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             maxLength: null,
-                            textCapitalization:
-                                TextCapitalization.sentences,
+                            textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                               hintText: 'Type a message',
                               hintStyle: GoogleFonts.ubuntu(
@@ -388,12 +402,32 @@ class _ChatPageState extends State<ChatPage> {
 
       widget.chatroom.lastMessage = msg;
       widget.chatroom.lastMessageTime = newMessage.timeStamp;
+      widget.chatroom.lastMessageSender = widget.firebaseUser.uid;
       FirebaseFirestore.instance
           .collection("chatrooms")
           .doc(widget.chatroom.chatRoomId)
           .set(widget.chatroom.toMap());
 
-      UIHelper.toast("Message sent", Toast.LENGTH_SHORT, ToastGravity.TOP);
+      UIHelper.toast("Message sent", Toast.LENGTH_SHORT, ToastGravity.CENTER);
+    }
+  }
+
+  void currMsgSeen(MessageModel messageModel) {
+    if (widget.chatroom.lastMessageSender == widget.chatUser.uid) {
+      messageModel.seen = true;
+      MessageModel newMsg = MessageModel(
+        messageId: messageModel.messageId,
+        message: messageModel.message,
+        sender: messageModel.sender,
+        timeStamp: messageModel.timeStamp,
+        seen: true,
+      );
+      FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(widget.chatroom.chatRoomId)
+          .collection("messages")
+          .doc(messageModel.messageId)
+          .set(newMsg.toMap());
     }
   }
 }

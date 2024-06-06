@@ -32,17 +32,19 @@ class _SplashScreenState extends State<SplashScreen> {
         decoration: BoxDecoration(
           gradient: gradientBackground,
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.whatshot,
-                size: 100,
-                color: Colors.black87,
+              Image.asset(
+                "assets/icon.png",
+                width: 120,
+                height: 120,                
               ),
-              Text(
-                "Welcome To The ChatBox",
+              sizeVer(10),
+              const Text(
+                "Welcome To The ChatBox \n(A Chatting Application)",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
@@ -50,7 +52,6 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ],
           ),
-          
         ),
       ),
     );

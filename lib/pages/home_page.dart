@@ -61,6 +61,31 @@ class _HomePageState extends State<HomePage> {
               switch (value) {
                 case 'About App':
                   // Navigate to info page or show dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(
+                          "About ChatBox ",
+                          style: GoogleFonts.dancingScript(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        content: const Text(
+                            "ChatBox is a real time chatting  application made using Flutter and Firebase.\nFor chatting with a person first you both have to create account, then search for the user by email or name then start chatting.\n\nThis app is made by Mr. Kartik Kumar."),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Close"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                   break;
               }
             },
@@ -112,11 +137,11 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     widget.userModel.name!,
                     style: GoogleFonts.dancingScript(
-                      fontSize: 28,
+                      fontSize: 30,
                       fontWeight: FontWeight.w900,
                       color: Colors.red,
-                      backgroundColor: const Color.fromARGB(255, 120, 230, 255),
                       letterSpacing: 1.5,
+                      wordSpacing: 2,
                     ),
                     textAlign: TextAlign.center,
                     softWrap: true,
@@ -260,10 +285,23 @@ class _HomePageState extends State<HomePage> {
         elevation: 5,
         backgroundColor: const Color.fromARGB(255, 251, 194, 255),
         splashColor: Colors.blue,
-        child: const Icon(
-          Icons.search_sharp,
-          size: 30,
-          shadows: [Shadow(color: Colors.black)],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.search_sharp,
+              size: 28,
+              shadows: [Shadow(color: Colors.black)],
+            ),
+            Text(
+              "Search User",
+              style: GoogleFonts.dancingScript(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
       body: SafeArea(

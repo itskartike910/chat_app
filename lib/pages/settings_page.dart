@@ -34,8 +34,16 @@ class _SettingsPageState extends State<SettingsPage> {
             gradient: gradientBackground,
           ),
           child: ListView(
-            children: const [
-              
+            children: [
+              Text(
+                "No Settings Available!!",
+                style: GoogleFonts.playfair(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
             ],
           ),
         ),
