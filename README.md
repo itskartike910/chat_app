@@ -100,30 +100,30 @@ Users can view and update their profile information. Profile pictures are stored
 
 ## Screenshots
 
-![Screenshot_20240619-113009_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/2bd7f254-cf04-43f7-8c49-4e29ba5ccb46)
-![Screenshot_20240619-113003_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/80c53dc1-fdb0-48de-862f-ddc1b63d0c4b)
-![Screenshot_20240619-112946_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/5fbafa3d-e055-44c7-9b00-2f1b2dca4be9)
-![Screenshot_20240619-112930_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/04ee8098-f567-4477-88fa-320b1920d502)
-![Screenshot_20240619-112920_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/d2d96938-92fe-4589-a27e-d75bcb7ce7f1)
-![Screenshot_20240619-112912_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/fd4eff15-9723-4a4e-83ef-c6179a1a451a)
-![Screenshot_20240619-112902_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/6ddc8203-0ebb-4d21-ad61-bef55d3801b5)
-![Screenshot_20240619-112850_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/38c1d049-f23b-4089-80ac-94498a71d999)
-![Screenshot_20240619-112846_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/8a7de64a-99c6-4421-abc5-f4958f86c468)
-![Screenshot_20240619-112841_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/854263c8-5a05-47a9-ab76-98a5390b93fb)
-![Screenshot_20240619-112838_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/4c531789-da95-4e76-b8de-e79ffea139ea)
-![Screenshot_20240619-112827_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/fb7ad31d-d16c-492f-880d-09e1e7193e3b)
-![Screenshot_20240619-112821_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/5870e6fe-d265-423c-8054-5a86fd0857f0)
-![Screenshot_20240619-112808_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/3fa3a411-6b07-49eb-a7c3-81ef61516aa1)
-![Screenshot_20240619-112803_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/1be80a56-4214-43d9-b724-a97e08eb6e2c)
-![Screenshot_20240619-112733_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/474ea33e-c435-4808-aa8c-7d92002f66a1)
-![Screenshot_20240619-112712_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/9045cfef-124c-4750-af74-72bd3a784be4)
-![Screenshot_20240619-112707_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/157dac0a-9041-40d2-8a48-4b3d2a8b9e35)
-![Screenshot_20240619-112654_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/fdea6ed6-fe2c-4909-a40f-c730b0bcef90)
-![Screenshot_20240619-112647_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/508b342b-6c89-4147-b732-f60486d21423)
-![Screenshot_20240619-112644_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/c21abb1b-70b2-4369-a934-0f3e00ab9e11)
-![Screenshot_20240619-112608_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/0944c459-1f5c-40ef-9cd5-48a49af5a2d4)
-![Screenshot_20240619-112541_Google Play services](https://github.com/itskartike910/chat_app/assets/96167648/33b7f338-8af0-492e-b6d1-fdf4db39a440)
-![Screenshot_20240619-112105_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/c03d9229-a170-4825-b82f-d2c2948aeb5a)
-![Screenshot_20240619-112101_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/0a163932-d4b3-4600-8551-f32fb5ae30e6)
-![Screenshot_20240619-112052_Chat Box](https://github.com/itskartike910/chat_app/assets/96167648/1bf2d23c-cf59-44c0-a150-472c9fe52bca)
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/2bd7f254-cf04-43f7-8c49-4e29ba5ccb46" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/80c53dc1-fdb0-48de-862f-ddc1b63d0c4b" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/5fbafa3d-e055-44c7-9b00-2f1b2dca4be9" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/04ee8098-f567-4477-88fa-320b1920d502" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/d2d96938-92fe-4589-a27e-d75bcb7ce7f1" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/fd4eff15-9723-4a4e-83ef-c6179a1a451a" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/6ddc8203-0ebb-4d21-ad61-bef55d3801b5" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/38c1d049-f23b-4089-80ac-94498a71d999" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/8a7de64a-99c6-4421-abc5-f4958f86c468" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/854263c8-5a05-47a9-ab76-98a5390b93fb" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/4c531789-da95-4e76-b8de-e79ffea139ea" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/fb7ad31d-d16c-492f-880d-09e1e7193e3b" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/5870e6fe-d265-423c-8054-5a86fd0857f0" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/3fa3a411-6b07-49eb-a7c3-81ef61516aa1" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/1be80a56-4214-43d9-b724-a97e08eb6e2c" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/474ea33e-c435-4808-aa8c-7d92002f66a1" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/9045cfef-124c-4750-af74-72bd3a784be4" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/157dac0a-9041-40d2-8a48-4b3d2a8b9e35" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/fdea6ed6-fe2c-4909-a40f-c730b0bcef90" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/508b342b-6c89-4147-b732-f60486d21423" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/c21abb1b-70b2-4369-a934-0f3e00ab9e11" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/0944c459-1f5c-40ef-9cd5-48a49af5a2d4" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/33b7f338-8af0-492e-b6d1-fdf4db39a440" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/c03d9229-a170-4825-b82f-d2c2948aeb5a" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/0a163932-d4b3-4600-8551-f32fb5ae30e6" width="200">
+<img src="https://github.com/itskartike910/chat_app/assets/96167648/1bf2d23c-cf59-44c0-a150-472c9fe52bca" width="200">
 
