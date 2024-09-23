@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:chat_app/main.dart';
 import 'package:chat_app/models/chat_room_model.dart';
 import 'package:chat_app/models/message_model.dart';
@@ -7,10 +11,12 @@ import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:chat_app/pages/profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
@@ -32,6 +38,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   TextEditingController message = TextEditingController();
+  File? imageFile;
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -240,18 +247,29 @@ class _ChatPageState extends State<ChatPage> {
                                                     ? CrossAxisAlignment.end
                                                     : CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                currentMessage.message
-                                                    .toString(),
-                                                maxLines: null,
-                                                softWrap: true,
-                                                overflow: TextOverflow.clip,
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.black,
-                                                    fontSize: messageFontSize,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
+                                              currentMessage.containsImage ==
+                                                      false
+                                                  ? Text(
+                                                      currentMessage.message
+                                                          .toString(),
+                                                      maxLines: null,
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: GoogleFonts.ubuntu(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              messageFontSize,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    )
+                                                  : Image.network(
+                                                      currentMessage.message
+                                                          .toString(),
+                                                      fit: BoxFit.cover,
+                                                      height: 200,
+                                                      width: 200,
+                                                    ),
                                               Text(
                                                 formattedTime,
                                                 maxLines: null,
@@ -320,16 +338,18 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   child: Row(
                     children: [
-                      // IconButton(
-                      //   onPressed: () {},
-                      //   icon: const Icon(
-                      //     Icons.attach_file,
-                      //     color: Colors.green,
-                      //     size: 30,
-                      //     fill: BorderSide.strokeAlignCenter,
-                      //     applyTextScaling: true,
-                      //   ),
-                      // ),
+                      IconButton(
+                        onPressed: () {
+                          showPhotoOptions();
+                        },
+                        icon: const Icon(
+                          Icons.attach_file,
+                          color: Colors.green,
+                          size: 30,
+                          fill: BorderSide.strokeAlignCenter,
+                          applyTextScaling: true,
+                        ),
+                      ),
                       Flexible(
                         child: SingleChildScrollView(
                           reverse: true,
@@ -391,7 +411,8 @@ class _ChatPageState extends State<ChatPage> {
           message: msg,
           sender: widget.firebaseUser.uid,
           timeStamp: DateTime.now(),
-          seen: false);
+          seen: false,
+          containsImage: false);
 
       FirebaseFirestore.instance
           .collection("chatrooms")
@@ -428,6 +449,117 @@ class _ChatPageState extends State<ChatPage> {
           .collection("messages")
           .doc(messageModel.messageId)
           .set(newMsg.toMap());
+    }
+  }
+
+  void showPhotoOptions() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Choose an image to send...",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: bgColor,
+          elevation: 5,
+          shadowColor: const Color.fromARGB(255, 36, 255, 215),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text(
+                  "Take a Photo",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  selectImages(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_album),
+                title: const Text(
+                  "Upload from Gallery",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  selectImages(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void selectImages(
+    ImageSource img,
+  ) async {
+    XFile? pickedfile = await ImagePicker().pickImage(source: img);
+    if (pickedfile != null) {
+      cropImage(pickedfile);
+    }
+  }
+
+  void cropImage(XFile file) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: file.path,
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 20,
+    );
+
+    if (croppedImage != null) {
+      setState(() {
+        imageFile = File(croppedImage.path);
+      });
+    }
+  }
+
+  void uploadData() async {
+    UIHelper.showLoadingDialog(context, "Sending Image...");
+    try {
+      UploadTask uploadTask = FirebaseStorage.instance
+          .ref("media")
+          .child(widget.userModel.uid.toString())
+          .putFile(imageFile!);
+
+      TaskSnapshot snapshot = await uploadTask;
+      String imageUrl = await snapshot.ref.getDownloadURL();
+      MessageModel newMessage = MessageModel(
+        messageId: uuid.v1(),
+        message: imageUrl,
+        sender: widget.firebaseUser.uid,
+        timeStamp: DateTime.now(),
+        seen: false,
+        containsImage: true,
+      );
+
+      FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(widget.chatroom.chatRoomId)
+          .collection("messages")
+          .doc(newMessage.messageId)
+          .set(newMessage.toMap());
+
+      widget.chatroom.lastMessage = "Image";
+      widget.chatroom.lastMessageTime = newMessage.timeStamp;
+      widget.chatroom.lastMessageSender = widget.firebaseUser.uid;
+      FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(widget.chatroom.chatRoomId)
+          .set(widget.chatroom.toMap());
+    } catch (e) {
+      Navigator.pop(context);
+      UIHelper.toast(
+          "Error Sending Image: $e", Toast.LENGTH_LONG, ToastGravity.BOTTOM);
     }
   }
 }

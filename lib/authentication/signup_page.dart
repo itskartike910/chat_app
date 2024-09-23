@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app/authentication/complete_profile_page.dart';
 import 'package:chat_app/helper/ui_helper.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -241,6 +243,7 @@ class _SignupPageState extends State<SignupPage> {
     } catch (e) {
       UIHelper.toast("Error during Google Sign-In: $e", Toast.LENGTH_SHORT,
           ToastGravity.BOTTOM);
+      Navigator.pop(context);
     }
   }
 }
