@@ -8,6 +8,7 @@ import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/pages/chat_page.dart';
 import 'package:chat_app/pages/profile_page.dart';
 import 'package:chat_app/pages/search_page.dart';
+import 'package:chat_app/pages/ai_chat_page.dart';
 import 'package:chat_app/helper/widgets/consts.dart';
 import 'package:chat_app/helper/widgets/form_button.dart';
 import 'package:chat_app/pages/settings_page.dart';
@@ -187,6 +188,19 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: const Color.fromARGB(100, 185, 185, 255),
                     textColor: Colors.black,
                   ),
+                  FormButtonWidget(
+                    text: "AI Chat",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AIChatPage(),
+                        ),
+                      );
+                    },
+                    backgroundColor: const Color.fromARGB(100, 185, 185, 255),
+                    textColor: Colors.black,
+                  ),
                 ],
               ),
             ),
@@ -268,41 +282,80 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Future.delayed(const Duration(milliseconds: 120), () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SearchPage(
-                  userModel: widget.userModel,
-                  firebaseUser: widget.firebaseUser,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "ai_chat",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AIChatPage(),
                 ),
-              ),
-            );
-          });
-        },
-        elevation: 5,
-        backgroundColor: const Color.fromARGB(255, 251, 194, 255),
-        splashColor: Colors.blue,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.search_sharp,
-              size: 28,
-              shadows: [Shadow(color: Colors.black)],
+              );
+            },
+            elevation: 5,
+            backgroundColor: const Color.fromARGB(255, 251, 194, 255),
+            splashColor: Colors.blue,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.smart_toy,
+                  size: 28,
+                  shadows: [Shadow(color: Colors.black)],
+                ),
+                Text(
+                  "AI Chat",
+                  style: GoogleFonts.dancingScript(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            Text(
-              "Search User",
-              style: GoogleFonts.dancingScript(
-                fontSize: 10,
-                fontWeight: FontWeight.w900,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: "search_user",
+            onPressed: () {
+              Future.delayed(const Duration(milliseconds: 120), () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      userModel: widget.userModel,
+                      firebaseUser: widget.firebaseUser,
+                    ),
+                  ),
+                );
+              });
+            },
+            elevation: 5,
+            backgroundColor: const Color.fromARGB(255, 251, 194, 255),
+            splashColor: Colors.blue,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.search_sharp,
+                  size: 28,
+                  shadows: [Shadow(color: Colors.black)],
+                ),
+                Text(
+                  "Search User",
+                  style: GoogleFonts.dancingScript(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
